@@ -1,6 +1,5 @@
 #import librairies
 import os
-import csv
 from bs4 import BeautifulSoup as bs
 import requests
 import time
