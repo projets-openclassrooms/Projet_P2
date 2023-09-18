@@ -4,32 +4,28 @@ from bs4 import BeautifulSoup as bs
 import requests
 import time
 
-url="https://books.toscrape.com"
+trait="-"*100
 
-#Extraction des données du site avec boucle de test de connection au site while... response non ok pause
-response= requests.get(url)
-print(response.headers['content-type']) # 'text/html'
-#print(response.encoding) # 'ISO-8859-1'
+#url du site
+url = "https://books.toscrape.com"
+
+#url pour extraire les donnees de la page "travel" pour test
+url = url + "/catalogue/category/books/travel_2/index.html"
+
+#Extraction des données du site avec test de connection au site, response non ok pause
+response= requests.get(url, timeout= 1)
+print(trait)
+
+if response.status_code == requests.codes.ok:
+    print(response.headers['content-type']) # 'text/html'
+
+if response.encoding == 'ISO-8859-1':
+    response.encoding='utf-8'
+    print(response.encoding)
 
 if response.ok:
     links=[]
     soup= bs(response.text, features="html.parser")
-    title=soup.find("div", {"class": "col-sm-6 product_main"}).find("h1") # extrait le titre
-    category = soup.find("ul", {"class": "breadcrumb"}).find_all("a")[2] # recherche la catégorie
-##    products=soup.findAll('<article class="product_pod">')
-##    for product in products:
-##        a=product.find('a')
-##        link=a['href']
-##        links.append(url+link)
-    print(links)
-    time.sleep(1)
-
-
-
-liste_products=soup.findAll('All products')
-print(liste_products)
-def get_url(posi):
-    pass
-#Transformation en fichier csv
-
-#Load
+    # soup.prettify() pour connaitre la structure de la page html
+    print(soup.prettify())
+    
