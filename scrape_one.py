@@ -10,7 +10,7 @@ trait="-"*100
 url = "https://books.toscrape.com"
 
 #url pour extraire les donnees de la page "travel" pour test
-url = url + "/catalogue/category/books/travel_2/index.html"
+url = url + "/catalogue/dune-dune-1_151/index.html"
 
 #Extraction des données du site avec test de connection au site, response non ok pause
 response= requests.get(url, timeout= 1)
@@ -25,7 +25,9 @@ if response.encoding == 'ISO-8859-1':
 
 if response.ok:
     links=[]
-    soup= bs(response.text, features="html.parser")
+    soup= bs(response.content, features="html.parser")
     # soup.prettify() pour connaitre la structure de la page html
-    print(soup.prettify())
-    
+    #print(soup.prettify())
+    title = soup.h1.text.lower()
+    price = soup.select('#product_description ~ table td')[3].text
+    print(title, price)
