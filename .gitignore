@@ -1,5 +1,5 @@
 Scripts/
 Lib/
-.idea
+*.idea
 .env/
-.cfg
+*.cfg
