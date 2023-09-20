@@ -1,6 +1,6 @@
 # projet_P2
 
-But du projet : Utilisez les bases de Python pour l'analyse de marché en récupérant la totalité d'un site 'https://books.toscrape.com/' contenant les informations de livres et les stocker dans un fichier local au format csv.
+But du projet : Utilisez les bases de Python pour l'analyse de marché en récupérant la totalité d'un site https://books.toscrape.com/ contenant les informations de livres et les stocker dans un fichier local au format csv.
 
 ## Installations des requis sous windows
 Installation python 3.11 sur la machine
