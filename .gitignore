@@ -3,3 +3,13 @@ Lib/
 *.idea
 .env/
 *.cfg
+datas/
+img/
+*.o
+*.pyc
+*.class
+*.tmp
+*.log
+*.lock
+.idea/
+**/logs
