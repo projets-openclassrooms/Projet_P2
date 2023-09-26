@@ -3,8 +3,9 @@ Lib/
 *.idea
 .env/
 *.cfg
-datas/
-img/
+datas/*
+img/*
+site_scrapped/*
 *.o
 *.pyc
 *.class
