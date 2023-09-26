@@ -1,7 +1,8 @@
+import csv
+
 import requests
 from bs4 import BeautifulSoup
 
-import csv
 
 #fonction pour extraire (Extract) les informations d'un livre du site https://books.toscrape.com/
 def get_book_info_from_url(link):
@@ -38,22 +39,28 @@ def transform_book_info(parse_url):
 
 #fonction pour charger les données dans un fichier excel(Load), séparations : ','
 def save_book_info_to_csv(book_info:dict):
+
     with open(
-        'book_info.csv', 'w', encoding='utf-8-sig'
+        'datas/book_info.csv', mode='a', encoding='utf-8-sig'
     ) as csvfile:
-        writer = csv.DictWriter(csvfile, book_info, dialect='excel')
+        writer = csv.DictWriter(csvfile, fieldnames=book_info,delimiter=";", dialect='excel')
+        #entete unique
         writer.writeheader()
         #controle ligne vide pour ajout à la ligne suivante
         writer.writerow(book_info)
+
 
 main_url = 'https://books.toscrape.com/'
 #pour extraire une page test
 url = main_url + "catalogue/dune-dune-1_151/index.html"
 
 #pour extraire d'autres pages
-url = main_url + "catalogue/its-only-the-himalayas_981/index.html"
+#url = main_url + "catalogue/its-only-the-himalayas_981/index.html"
 #url = main_url + "catalogue/full-moon-over-noahs-ark-an-odyssey-to-mount-ararat-and-beyond_811/index.html"
 
 if __name__ == '__main__':
+    #recherche des informations du site
     parse_url=get_book_info_from_url(url)
+    #sauvegarde des données avec instruction save_book_info_to_csv()
     save_book_info_to_csv(transform_book_info(parse_url))
+    print('import terminé')
