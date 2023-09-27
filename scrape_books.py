@@ -29,6 +29,7 @@ sert à récupérer toutes les url d'une seule catégorie
 """
 main_url = "https://books.toscrape.com/"
 
+
 # gestion des erreurs de connection sommaire à revoir car bug
 def test_connection(url):
     try:
@@ -44,7 +45,9 @@ def get_all_url_from_liens(url_liens):
     while True:
         try:
             reponse = requests.get(url_liens)
-        except requests.exceptions.RequestException as erreur:  # affiche l'erreur renvoyée
+        except (
+            requests.exceptions.RequestException
+        ) as erreur:  # affiche l'erreur renvoyée
             print(erreur)
         page = reponse.content
         soup = bs(page, "html.parser")
@@ -81,16 +84,19 @@ def get_all_url_from_liens(url_liens):
     return categories
 
 
-
 def get_all_liens(url):
     try:
         reponse = requests.get(url)
     except requests.exceptions.RequestException as erreur:
         print(erreur)
     page = reponse.content  # créé une variable avec le contenu de cette réponse
-    soup = bs(page, "html.parser")  # parse la variable via le parser de BeautifulSoup (gagner en lisibilité)
+    soup = bs(
+        page, "html.parser"
+    )  # parse la variable via le parser de BeautifulSoup (gagner en lisibilité)
     data = []  # initialisation de la liste qui stocke les urls
-    all_cat = soup.find("ul", class_="nav nav-list")  # isole la classe nav nav-list de la balise ul
+    all_cat = soup.find(
+        "ul", class_="nav nav-list"
+    )  # isole la classe nav nav-list de la balise ul
     hrefs = all_cat.find_all("a", href=True)
     for href in hrefs:  # parcourt les valeurs des hrefs extraits au dessus
         href = href["href"]  # extrait la valeur seule de href
@@ -101,6 +107,11 @@ def get_all_liens(url):
     return data
 
 
+"""
+# to run the script. 
+"""
+
+
 def main():
     total_scraped = 0
     n = 0  # compteur
@@ -108,19 +119,34 @@ def main():
 
     url_home = f"{main_url}index.html"  # url de l'accueil du site
     url_category = get_all_liens(url_home)
-
-    for url in url_category:
-        match = re.search(r'\/([^\/]+)_\d+\/', url)
+    question = input("Voulez-vous tester une catégorie ? O/N ")
+    if question == "O":
+        url_categorie = f"{main_url}catalogue/category/books/mystery_3/index.html"
+        match = re.search(r"\/([^\/]+)_\d+\/", url_categorie)
         name = match.group(1)
-        url_liens = get_all_url_from_liens(url)
+        url_liens = get_all_url_from_liens(url_categorie)
         scraped_data = scrap_from_url(url_liens, name)
         write_to_csv(scraped_data, name)
         n += 1  # incrémente le compteur
-        total_scraped += len(url_liens)  # incrémente le total de livres scrapés
+        total_scraped += len(
+            url_liens
+        )  # incrémente le total de livres scrapés de la catégorie
         print(
-            f"catégorie {n} sur {len(url_category)}; dossier : {name} transféré en local avec {len(url_liens)} livres scrapé(s)")
-        
-
+            f'catégorie {n} sur {len(url_category)}; dossier : {name} transféré en local avec {len(url_liens)} livres scrapé(s)'
+        )
+    else:
+        print("scrape de toutes les catégories du site")
+        for url in url_category:
+            match = re.search(r"\/([^\/]+)_\d+\/", url)
+            name = match.group(1)
+            url_liens = get_all_url_from_liens(url)
+            scraped_data = scrap_from_url(url_liens, name)
+            write_to_csv(scraped_data, name)
+            n += 1  # incrémente le compteur
+            total_scraped += len(url_liens)  # incrémente le total de livres scrapés
+            print(
+                f"catégorie {n} sur {len(url_category)}; dossier : {name} transféré en local avec {len(url_liens)} livres scrapé(s)"
+            )
     print(f" {total_scraped} livres scrapés")
 
 
