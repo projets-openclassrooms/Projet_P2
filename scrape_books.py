@@ -104,7 +104,7 @@ def get_all_liens(url):
 def main():
     total_scraped = 0
     n = 0  # compteur
-    print(f"démarrage du compteur de catégories {n} sur total de {total_scraped} livres scrapés")
+    print(f"démarrage du scan du site {main_url}")
 
     url_home = f"{main_url}index.html"  # url de l'accueil du site
     url_category = get_all_liens(url_home)
@@ -113,8 +113,8 @@ def main():
         match = re.search(r'\/([^\/]+)_\d+\/', url)
         name = match.group(1)
         url_liens = get_all_url_from_liens(url)
-        scrapped_data = scrap_from_url(url_liens, name)
-        write_to_csv(scrapped_data, name)
+        scraped_data = scrap_from_url(url_liens, name)
+        write_to_csv(scraped_data, name)
         n += 1  # incrémente le compteur
         total_scraped += len(url_liens)  # incrémente le total de livres scrapés
         print(
