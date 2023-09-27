@@ -6,12 +6,21 @@ import os
 def write_to_csv(datas, name):
     # création des headers
 
-    headers = ["product_page_url", "universal_product_code", "title", "price_including_tax", "price_excluding_tax",
-               "number_available", "product_description", "category", "review_rating", "image_url"]
+    headers = [
+        "product_page_url",
+        "universal_product_code",
+        "title",
+        "price_including_tax",
+        "price_excluding_tax",
+        "number_available",
+        "product_description",
+        "category",
+        "review_rating",
+        "image_url",
+    ]
 
-    file_path = os.path.join("site_scrapped", name,
-                             f"{name}.csv")
-    with open(file_path, "w", newline='', encoding="utf-8-sig") as file:
+    file_path = os.path.join("site_scraped", name, f"{name}.csv")
+    with open(file_path, "w", newline="", encoding="utf-8-sig") as file:
         writer = csv.writer(file, delimiter=";")
         writer.writerow(headers)
         n = 0  # initialise un compteur
@@ -19,4 +28,3 @@ def write_to_csv(datas, name):
         for data in datas:
             writer.writerow(data)
             n += 1  # incrémente le compteur
-

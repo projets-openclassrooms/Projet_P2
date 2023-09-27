@@ -7,13 +7,7 @@ from scrape_images import download_img
 
 # convertit le rating d'un str de lettres en int
 def rating_to_int(rating):
-    rating_map = {
-        "Zero": 0,
-        "One": 1,
-        "Two": 2,
-        "Three": 3,
-        "Four": 4,
-        "Five": 5}
+    rating_map = {"Zero": 0, "One": 1, "Two": 2, "Three": 3, "Four": 4, "Five": 5}
     return rating_map.get(rating, rating)
 
 
@@ -30,6 +24,7 @@ def rating_to_int(rating):
 # - image_url
 # resultat sous forme de liste
 
+
 def scrap_from_url(urls, name):
     result = []  # init liste de la catégorie
     for url in urls:
@@ -41,9 +36,7 @@ def scrap_from_url(urls, name):
             print(erreur)
         page = reponse.content
 
-
         soup = bs(page, "html.parser")
-
 
         product_page_url = url
         data.append(product_page_url)
@@ -68,25 +61,28 @@ def scrap_from_url(urls, name):
         # même principe que pour l'UPC
         number_available = soup.find("th", string="Availability")
         number_available = number_available.find_next("td").string.strip()
-        number_available = re.search(r'\d+', number_available).group()
+        number_available = re.search(r"\d+", number_available).group()
         data.append(number_available)
 
         product_description = soup.find("meta", attrs={"name": "description"})
         product_description = product_description["content"].strip()
         data.append(product_description)
 
-        category = soup.find("a", href=re.compile(
-            r'/category/books/([\w-]+)/index.html')).string.strip()
+        category = soup.find(
+            "a", href=re.compile(r"/category/books/([\w-]+)/index.html")
+        ).string.strip()
         data.append(category)
 
-        review_rating = soup.find("p", class_=re.compile(r'star-rating\s+(\w+)'))
-        review_rating = re.search(r'\b(\w+)\b', review_rating["class"][1]).group(1)
+        review_rating = soup.find("p", class_=re.compile(r"star-rating\s+(\w+)"))
+        review_rating = re.search(r"\b(\w+)\b", review_rating["class"][1]).group(1)
         review_rating = review_rating.strip()
         review_rating = rating_to_int(review_rating)
         data.append(review_rating)
 
         image_url = soup.find("img")["src"]
-        image_url = image_url.replace("../", "")  # on retire les ../../ au début du lien
+        image_url = image_url.replace(
+            "../", ""
+        )  # on retire les ../../ au début du lien
         image_url = "http://books.toscrape.com/" + image_url
         data.append(image_url)
 
