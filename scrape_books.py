@@ -132,7 +132,7 @@ def main():
             url_liens
         )  # incrémente le total de livres scrapés de la catégorie
         print(
-            f'catégorie {n} sur {len(url_category)}; dossier : {name} transféré en local avec {len(url_liens)} livres scrapé(s)'
+            f"catégorie {n} sur {len(url_category)}; dossier : {name} transféré en local avec {len(url_liens)} livres scrapé(s)"
         )
     else:
         print("scrape de toutes les catégories du site")
