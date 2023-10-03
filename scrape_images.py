@@ -10,7 +10,9 @@ download_img
 #utilisation de f'strings pour éviter problèmes caractères chainés
 
 """
-
+def clean_name(name):
+    cleaned_name = re.sub(r'[<>;:"/\\|?*]', "-", name)
+    return cleaned_name
 
 
 
@@ -31,6 +33,8 @@ def download_img(img_url, name, category):
         if not response.ok:
             print(response)
         else:
-            print("Téléchargement de l'image.")
+            print("Téléchargement de l'image.", name)
 
         images.write(response.content)
+
+#download_img('https://books.toscrape.com/catalogue/sharp-objects_997/index.html','Sharp Objects','mystery')
