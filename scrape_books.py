@@ -113,51 +113,54 @@ def get_all_liens(url):
 # to run the script. 
 """
 
-
-def main():
-    total_scraped = 0
-    n = 0  # compteur
-    print(f"démarrage du scan du site {home_url}")
-
-    url_home = f"{home_url}index.html"  # url de l'accueil du site
-    url_category = get_all_liens(url_home)
-    question = input("Voulez-vous tester une catégorie ? O/N ")
-    if str.lower(question) == "o":
-        i=0
-        for url in url_category:
-            print(i, "+"*2, url)
-            i+=1
-            choix = input("Merci d'indiquer une catégorie de 0 à 49 :")
-            url_categorie = url_category[int(choix)]
-        match = re.search(r"\/([^\/]+)_\d+\/", url_categorie)
-        name = match.group(1)
-        url_liens = get_all_url_from_liens(url_categorie)
-        scraped_data = scrap_from_url(url_liens, name)
-        write_to_csv(scraped_data, name)
-        n += 1  # incrémente le compteur
-        total_scraped += len(
-            url_liens
-        )  # incrémente le total de livres scrapés de la catégorie
-        print(
-            f"catégorie {n} sur {len(url_category)}; dossier : {name} transféré en local avec {len(url_liens)} livres scrapé(s)"
-        )
-        clear()
-    else:
-        print("scrape de toutes les catégories du site")
-        #print("liens des catégories  sauf le home : ",url_category)
-        for url in url_category:
-            match = re.search(r"\/([^\/]+)_\d+\/", url)
-            name = match.group(1)
-            print(name, ":")
-            url_liens = get_all_url_from_liens(url)
-            scraped_data = scrap_from_url(url_liens, name)
-            write_to_csv(scraped_data, name)
-            n += 1  # incrémente le compteur
-            total_scraped += len(url_liens)  # incrémente le total de livres scrapés
-            print(
-                f"catégorie {n} sur {len(url_category)}; dossier : {name} transféré en local avec {len(url_liens)} livres scrapé(s)"
-            )
-    print(f" {total_scraped} livres scrapés")
+# main cassé et bug
+# def main():
+#     total_scraped = 0
+#     n = 0  # compteur
+#     print(f"démarrage du scan du site {home_url}")
+#
+#     url_home = f"{home_url}index.html"  # url de l'accueil du site
+#     url_category = get_all_liens(url_home)
+#     question = input("Voulez-vous tester une catégorie ? O/N ")
+#     if str.lower(question) == "o":
+#         i=0
+#         for url in url_category:
+#             print(i, "+"*2, url)
+#             i+=1
+#             choix = input("Merci d'indiquer une catégorie de 0 à 49 :")
+#             url_categorie = url_category[int(choix)]
+#         match = re.search(r"\/([^\/]+)_\d+\/", url_categorie)
+#         name = match.group(1)
+#         url_liens = get_all_url_from_liens(url_categorie)
+#         scraped_data = scrap_from_url(url_liens, name)
+#         write_to_csv(scraped_data, name)
+#         n += 1  # incrémente le compteur
+#         total_scraped += len(
+#             url_liens
+#         )  # incrémente le total de livres scrapés de la catégorie
+#         print(
+#             f"catégorie {n} sur {len(url_category)}; dossier : {name} transféré en local avec {len(url_liens)} livres scrapé(s)"
+#         )
+#         clear()
+#     else:
+#         print("scrape de toutes les catégories du site")
+#         #print("liens des catégories  sauf le home : ",url_category)
+#         for url in url_category:
+#             print("url", url)
+#             match = re.search(r"\/([^\/]+)_\d+\/", url)
+#             name = match.group(1)
+#             print(name, ":")
+#             url_liens = get_all_url_from_liens(url)
+#             for url_book in url_liens:
+#
+#                 scraped_data = scrap_from_url(url_liens, name)
+#                 write_to_csv(scraped_data, name)
+#             n += 1  # incrémente le compteur
+#             total_scraped += len(url_liens)  # incrémente le total de livres scrapés
+#             print(
+#                 f"catégorie {n} sur {len(url_category)}; dossier : {name} transféré en local avec {len(url_liens)} livres scrapé(s)"
+#             )
+#     print(f" {total_scraped} livres scrapés")
 
 
 if __name__ == "__main__":
@@ -165,3 +168,8 @@ if __name__ == "__main__":
         main()
     except KeyboardInterrupt:
         print("Programme arrêté manuellement.")
+"""
+si pages > 1:
+    
+
+"""
