@@ -12,9 +12,7 @@ download_img
 """
 
 
-def clean_name(name):
-    cleaned_name = re.sub(r'[<>;:"/\\|?*]', "-", name)
-    return cleaned_name
+
 
 
 def download_img(img_url, name, category):

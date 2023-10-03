@@ -4,8 +4,8 @@ import re
 
 import requests
 from bs4 import BeautifulSoup as bs
-from scrape_infos import scrap_from_url
-from save_scrape import write_to_csv
+from scrape_infos import *
+from save_scrape import *
 
 """ source inspiration site pythondoctor
 sert à récupérer toutes les url d'une seule catégorie
@@ -29,7 +29,6 @@ sert à récupérer toutes les url d'une seule catégorie
 
 """
 home_url = "https://books.toscrape.com/"
-clear = lambda: os.system("cls")
 
 
 # gestion des erreurs de connection sommaire à revoir car bug
@@ -48,7 +47,7 @@ def get_all_url_from_liens(url_liens):
         try:
             reponse = requests.get(url_liens)
         except (
-            requests.exceptions.RequestException
+                requests.exceptions.RequestException
         ) as erreur:  # affiche l'erreur renvoyée
             print(erreur)
         page = reponse.content
@@ -56,10 +55,9 @@ def get_all_url_from_liens(url_liens):
 
         urls.append(url_liens)
 
-        try:
-            next_page = soup.find("li", class_="next").find("a")
-        except:
-            break
+        li_nexts = soup.find("li", class_="next").find("a")
+        if li_nexts is not None:
+            next_page = li_nexts.find('a')
 
         if next_page is not None:
             url_liens = next_page["href"]
@@ -87,10 +85,8 @@ def get_all_url_from_liens(url_liens):
 
 
 def get_all_liens(url):
-    try:
-        reponse = requests.get(url)
-    except requests.exceptions.RequestException as erreur:
-        print(erreur)
+    reponse = requests.get(url)
+
     page = reponse.content  # créé une variable avec le contenu de cette réponse
     soup = bs(
         page, "html.parser"
@@ -112,6 +108,29 @@ def get_all_liens(url):
 """
 # to run the script. 
 """
+
+
+def main():
+    total_scraped = 0  # 1000 à recuperer 20 pages * 50 livres
+    compteur = 0  # init compteur
+    print(f"démarrage du scan du site {home_url}")
+    dir_clean()  # existent ou pas donc efface et cree
+    url_category = get_all_liens(home_url)
+    print(len(url_category), "catégorires scrapées")
+    question = input("Voulez-vous tester une catégorie ? O/N ")
+    if str.lower(question) == "o":
+        i = 0
+        for url in url_category:
+            print(i, "+" * 2, url)
+            i += 1
+            choix = input("Merci d'indiquer une catégorie de 0 à 49 :")
+            choix_url = url_category[int(choix)]
+            print(choix_url, " choisi")
+    else:
+        pass
+
+    print(f" {total_scraped} livres scrapés")
+
 
 # main cassé et bug
 # def main():

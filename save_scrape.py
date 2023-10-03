@@ -3,6 +3,15 @@ import os
 
 
 # ecrit les données dans un fichier csv à partir des données et du nom désiré du fichier
+
+def clean_name(name):
+    cleaned_name = re.sub(r'[<>;:"/\\|?*]', "-", name)
+    return cleaned_name
+
+def dir_clean():
+    pass
+
+
 def write_to_csv(datas, name):
     # création des headers
 
