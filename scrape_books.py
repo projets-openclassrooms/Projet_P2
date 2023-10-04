@@ -86,12 +86,11 @@ def get_cat_liens(url):
     datas = []  # initialisation de la liste qui stocke les urls
 
     for i in range(51):
-        all_cat = soup.find("ul", class_="nav nav-list").find_all("li")[i].get_text(strip=True)
+        #all_cat = soup.find("ul", class_="nav nav-list").find_all("li")[i].get_text(strip=True)
+        all_cat = soup.find("ul", class_="nav nav-list").findAll('a')[i]['href'][:]
 
         datas.append(all_cat)
-        print(len(all_cat))
 
-        print(datas)
     # isole la classe nav nav-list de la balise ul
     # all_cat = all_cat.strip(" \n ").rstrip(" \n ")
     # print(all_cat)
@@ -111,7 +110,7 @@ def get_cat_liens(url):
     #    data.append(url)  # ajoute l'url à la liste de données à retourner
     # datas.pop(0)
 
-    # return datas
+    return datas
 
 
 """
