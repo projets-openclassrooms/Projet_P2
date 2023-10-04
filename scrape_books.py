@@ -46,7 +46,7 @@ def get_all_url_from_liens(url_liens):
         li_nexts = soup.find_all("li", class_="next")
         if li_nexts is not None:
             next_page = li_nexts.find("a")
-            #print(li_nexts)
+            # print(li_nexts)
 
             if next_page is not None:
                 url_liens = next_page["href"]
@@ -62,7 +62,7 @@ def get_all_url_from_liens(url_liens):
             try:
                 reponse = requests.get(url)
             except (
-                requests.exceptions.RequestException
+                    requests.exceptions.RequestException
             ) as e:  # affiche l'erreur renvoyée
                 print(e)
             page = reponse.content
@@ -89,10 +89,10 @@ def get_cat_liens(url):
         reponse.content, "html.parser"
     )  # parse la variable via le parser de BeautifulSoup (gagner en lisibilité)
     data = []  # initialisation de la liste qui stocke les urls
-    # all_cat = soup.find(
-    #    "ul", class_="nav nav-list"
-    # ).findAll("a")  # isole la classe nav nav-list de la balise ul
-    # hrefs = all_cat.find_all(href)
+    all_cat = soup.find("ul", class_="nav nav-list").findAll("a")  # isole la classe nav nav-list de la balise ul
+    hrefs = all_cat.find_all(href)
+
+
     hrefs = soup.find("ul", class_="nav nav-list")
     for href in hrefs:  # parcourt les valeurs des hrefs extraits au dessus
         # print(href)
@@ -102,7 +102,6 @@ def get_cat_liens(url):
     data.pop(0)
 
     return data
-
 
 """
 # to run the script. 
