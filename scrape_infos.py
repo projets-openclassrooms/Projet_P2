@@ -80,9 +80,7 @@ def scrap_from_url(url, name):
     data.append(review_rating)
 
     image_url = soup.find("img")["src"]
-    image_url = image_url.replace(
-        "../", ""
-    )  # on retire les ../../ au début du lien
+    image_url = image_url.replace("../", "")  # on retire les ../../ au début du lien
     image_url = "http://books.toscrape.com/" + image_url
     data.append(image_url)
 

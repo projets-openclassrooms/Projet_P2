@@ -7,7 +7,7 @@ from bs4 import BeautifulSoup as bs
 from scrape_infos import *
 from save_scrape import *
 
-""" source inspiration site pythondoctor
+"""
 sert à récupérer toutes les url d'une seule catégorie
     urls = []  # initialisation de la liste servant à stocker nos urls
     categories = []  # initialisation de la liste des datas
@@ -44,12 +44,8 @@ def get_all_url_from_liens(url_liens):
     categories = []
     url_liens_temp = url_liens.split("index")[0]
     while True:
-        try:
-            reponse = requests.get(url_liens)
-        except (
-                requests.exceptions.RequestException
-        ) as erreur:  # affiche l'erreur renvoyée
-            print(erreur)
+
+        reponse = requests.get(url_liens)
         page = reponse.content
         soup = bs(page, "html.parser")
 
@@ -84,20 +80,20 @@ def get_all_url_from_liens(url_liens):
     return categories
 
 
-def get_all_liens(url):
+def get_cat_liens(url):
     reponse = requests.get(url)
 
-    page = reponse.content  # créé une variable avec le contenu de cette réponse
-    soup = bs(
-        page, "html.parser"
-    )  # parse la variable via le parser de BeautifulSoup (gagner en lisibilité)
+    #page = reponse.content  # créé une variable avec le contenu de cette réponse
+    soup = bs(reponse.content, "html.parser")  # parse la variable via le parser de BeautifulSoup (gagner en lisibilité)
     data = []  # initialisation de la liste qui stocke les urls
-    all_cat = soup.find(
-        "ul", class_="nav nav-list"
-    )  # isole la classe nav nav-list de la balise ul
-    hrefs = all_cat.find_all("a", href=True)
+    #all_cat = soup.find(
+    #    "ul", class_="nav nav-list"
+    #).findAll("a")  # isole la classe nav nav-list de la balise ul
+    #hrefs = all_cat.find_all(href)
+    hrefs = soup.find("ul", class_="nav nav-list")
     for href in hrefs:  # parcourt les valeurs des hrefs extraits au dessus
-        href = href["href"]  # extrait la valeur seule de href
+        print(href)
+        #href = href["href"]  # extrait la valeur seule de href
         url = f"{home_url}{href}"
         data.append(url)  # ajoute l'url à la liste de données à retourner
     data.pop(0)
@@ -111,11 +107,11 @@ def get_all_liens(url):
 
 
 def main():
-    total_scraped = 0  # 1000 à recuperer 20 pages * 50 livres
+    total_scraped = 1000  # 1000 à recuperer 20 pages * 50 livres
     compteur = 0  # init compteur
     print(f"démarrage du scan du site {home_url}")
     dir_clean()  # existent ou pas donc efface et cree
-    url_category = get_all_liens(home_url)
+    url_category = get_cat_liens(home_url)
     print(len(url_category), "catégorires scrapées")
     question = input("Voulez-vous tester une catégorie ? O/N ")
     if str.lower(question) == "o":
@@ -127,9 +123,25 @@ def main():
             choix_url = url_category[int(choix)]
             print(choix_url, " choisi")
     else:
-        pass
+        print("scrape de toutes les catégories du site")
+            #print("liens des catégories  sauf le home : ",url_category)
+        for url in url_category:
+            print("url", url)
+            match = re.search(r"\/([^\/]+)_\d+\/", url)
+            name = match.group(1)
+            print(name, ":")
+            url_liens = get_all_url_from_liens(url)
+            for url_book in url_liens:
+                scraped_data = scrap_from_url(url_liens, name)
+                write_to_csv(scraped_data, name)
+            n += 1  # incrémente le compteur
+            total_scraped += len(url_liens)  # incrémente le total de livres scrapés
+            print(
+                f"catégorie {n} sur {len(url_category)}; dossier : {name} transféré en local avec {len(url_liens)} livres scrapé(s)"
+            )
+        print(f" {total_scraped} livres scrapés")
 
-    print(f" {total_scraped} livres scrapés")
+    #print(f" {total_scraped} livres à récupérer")
 
 
 # main cassé et bug
