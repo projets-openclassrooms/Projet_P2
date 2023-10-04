@@ -1,11 +1,6 @@
 # -*- coding: utf-8 -*-
-import os
-import re
-
-import requests
-from bs4 import BeautifulSoup as bs
-from scrape_infos import *
 from save_scrape import *
+from scrape_infos import *
 
 """
 sert à récupérer toutes les url d'une seule catégorie
@@ -88,20 +83,30 @@ def get_cat_liens(url):
     soup = bs(
         reponse.content, "html.parser"
     )  # parse la variable via le parser de BeautifulSoup (gagner en lisibilité)
-    data = []  # initialisation de la liste qui stocke les urls
-    all_cat = soup.find("ul", class_="nav nav-list").findAll("a")  # isole la classe nav nav-list de la balise ul
-    hrefs = all_cat.find_all(href)
+    datas = []  # initialisation de la liste qui stocke les urls
+    all_cat = soup.find("ul", class_="nav nav-list").findAll("li")
+    print(type(all_cat))
+    # isole la classe nav nav-list de la balise ul
+    # all_cat = all_cat.strip(" \n ").rstrip(" \n ")
+    # print(all_cat)
 
+    # hrefs = all_cat.find_all(href)
+    for cat in all_cat:
+        data = cat.find("a", href=True).content
+        data = str(data).strip().replace(" ", "-").lower()
+        datas.append(data)
 
-    hrefs = soup.find("ul", class_="nav nav-list")
-    for href in hrefs:  # parcourt les valeurs des hrefs extraits au dessus
-        # print(href)
-        # href = href["href"]  # extrait la valeur seule de href
-        url = f"{home_url}{href}"
-        data.append(url)  # ajoute l'url à la liste de données à retourner
-    data.pop(0)
+    print(datas)
+    # hrefs = soup.find("ul", class_="nav nav-list")
+    # for href in hrefs:  # parcourt les valeurs des hrefs extraits au dessus
+    # print(href)
+    # href = href["href"]  # extrait la valeur seule de href
+    #    url = f"{home_url}{href}"
+    #    data.append(url)  # ajoute l'url à la liste de données à retourner
+    datas.pop(0)
 
-    return data
+    return datas
+
 
 """
 # to run the script. 
@@ -126,7 +131,7 @@ def main():
             print(choix_url, " choisi")
     else:
         print("scrape de toutes les catégories du site")
-        # print("liens des catégories  sauf le home : ",url_category)
+        # print("liens des catégories sauf le home : " ,url_category)
         for url in url_category:
             print("url", url)
             match = re.search(r"\/([^\/]+)_\d+\/", url)
@@ -138,10 +143,10 @@ def main():
                 scraped_data = scrap_from_url(url_liens, name)
                 write_to_csv(scraped_data, name)
 
-            n += 1  # incrémente le compteur
+            compteur += 1  # incrémente le compteur
             total_scraped -= len(url_liens)  # incrémente le total de livres scrapés
             print(
-                f"catégorie {n} sur {len(url_category)}; dossier : {name} transféré en local avec {len(url_liens)} livres scrapé(s)"
+                f"catégorie {compteur} sur {len(url_category)}; dossier : {name} transféré : {len(url_liens)} livres."
             )
             print(f" {total_scraped} livres restants")
 
