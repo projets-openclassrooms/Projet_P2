@@ -78,7 +78,7 @@ def scrap_from_url(url, name):
 
     image_url = soup.find("img")["src"]
     image_url = image_url.replace("../", "")  # on retire les ../../ au début du lien
-    image_url = "http://books.toscrape.com/" + image_url
+    image_url = "https://books.toscrape.com/" + image_url
     data.append(image_url)
 
     download_img(image_url, title, name)
