@@ -30,10 +30,7 @@ def scrap_from_url(url, name):
 
     data = []  # init d'une liste d'1 livre
 
-    try:  # gestion des erreurs dans la requete
-        reponse = requests.get(url)
-    except requests.exceptions.RequestException as erreur:
-        print(erreur)
+    reponse = requests.get(url)
     page = reponse.content
 
     soup = bs(page, "html.parser")

@@ -48,13 +48,14 @@ def get_all_url_from_liens(url_liens):
         li_nexts = soup.find_all("li", class_="next")
 
         if li_nexts is not None:
-            next_page = li_nexts#.find("a")
+            next_page = li_nexts  # .find("a")
+            print(li_nexts)
 
         if next_page is not None:
             url_liens = next_page[0]["href"]
 
             url_liens = url_liens_temp + url_liens
-            print(url_liens)
+            # print(url_liens)
 
         for url in urls:
             try:
@@ -133,8 +134,10 @@ def main():
             print(name, ":")
             url_liens = get_all_url_from_liens(url)
             for url_book in url_liens:
+                print('book', url_book)
                 scraped_data = scrap_from_url(url_liens, name)
                 write_to_csv(scraped_data, name)
+
             n += 1  # incrémente le compteur
             total_scraped -= len(url_liens)  # incrémente le total de livres scrapés
             print(
