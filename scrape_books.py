@@ -32,11 +32,6 @@ home_url = "https://books.toscrape.com/"
 
 
 # gestion des erreurs de connection sommaire à revoir car bug
-def test_connection(url):
-    try:
-        reponse = requests.get(url_liens)
-    except requests.exceptions.RequestException as erreur:  # affiche l'erreur renvoyée
-        print(erreur)
 
 
 def get_all_url_from_liens(url_liens):
@@ -44,38 +39,42 @@ def get_all_url_from_liens(url_liens):
     categories = []
     url_liens_temp = url_liens.split("index")[0]
     while True:
-
         reponse = requests.get(url_liens)
         page = reponse.content
         soup = bs(page, "html.parser")
 
         urls.append(url_liens)
 
-        li_nexts = soup.find("li", class_="next").find("a")
+        li_nexts = soup.find_all("li", class_="next")
+
         if li_nexts is not None:
-            next_page = li_nexts.find('a')
+            next_page = li_nexts#.find("a")
 
         if next_page is not None:
-            url_liens = next_page["href"]
+            url_liens = next_page[0]["href"]
+
             url_liens = url_liens_temp + url_liens
+            print(url_liens)
 
-    for url in urls:
-        try:
-            reponse = requests.get(url)
-        except requests.exceptions.RequestException as e:  # affiche l'erreur renvoyée
-            print(e)
-        page = reponse.content
-        soup = bs(page, "html.parser")
+        for url in urls:
+            try:
+                reponse = requests.get(url)
+            except (
+                requests.exceptions.RequestException
+            ) as e:  # affiche l'erreur renvoyée
+                print(e)
+            page = reponse.content
+            soup = bs(page, "html.parser")
 
-        h3_tags = soup.find_all("h3")
-        # récupère les balises h3 contenant les urls des livres
-        # retire les ../../ en début d'url
-        # retourne une liste complete d'url
-        for h3_tag in h3_tags:
-            link_tag = h3_tag.a
-            href_value = link_tag["href"].replace("../", "")
-            href_value = f"{home_url}catalogue/{href_value}"
-            categories.append(href_value)
+            h3_tags = soup.find_all("h3")
+            # récupère les balises h3 contenant les urls des livres
+            # retire les ../../ en début d'url
+            # retourne une liste complete d'url
+            for h3_tag in h3_tags:
+                link_tag = h3_tag.a
+                href_value = link_tag["href"].replace("../", "")
+                href_value = f"{home_url}catalogue/{href_value}"
+                categories.append(href_value)
 
     return categories
 
@@ -83,17 +82,19 @@ def get_all_url_from_liens(url_liens):
 def get_cat_liens(url):
     reponse = requests.get(url)
 
-    #page = reponse.content  # créé une variable avec le contenu de cette réponse
-    soup = bs(reponse.content, "html.parser")  # parse la variable via le parser de BeautifulSoup (gagner en lisibilité)
+    # page = reponse.content  # créé une variable avec le contenu de cette réponse
+    soup = bs(
+        reponse.content, "html.parser"
+    )  # parse la variable via le parser de BeautifulSoup (gagner en lisibilité)
     data = []  # initialisation de la liste qui stocke les urls
-    #all_cat = soup.find(
+    # all_cat = soup.find(
     #    "ul", class_="nav nav-list"
-    #).findAll("a")  # isole la classe nav nav-list de la balise ul
-    #hrefs = all_cat.find_all(href)
+    # ).findAll("a")  # isole la classe nav nav-list de la balise ul
+    # hrefs = all_cat.find_all(href)
     hrefs = soup.find("ul", class_="nav nav-list")
     for href in hrefs:  # parcourt les valeurs des hrefs extraits au dessus
-        print(href)
-        #href = href["href"]  # extrait la valeur seule de href
+        # print(href)
+        # href = href["href"]  # extrait la valeur seule de href
         url = f"{home_url}{href}"
         data.append(url)  # ajoute l'url à la liste de données à retourner
     data.pop(0)
@@ -124,7 +125,7 @@ def main():
             print(choix_url, " choisi")
     else:
         print("scrape de toutes les catégories du site")
-            #print("liens des catégories  sauf le home : ",url_category)
+        # print("liens des catégories  sauf le home : ",url_category)
         for url in url_category:
             print("url", url)
             match = re.search(r"\/([^\/]+)_\d+\/", url)
@@ -135,13 +136,13 @@ def main():
                 scraped_data = scrap_from_url(url_liens, name)
                 write_to_csv(scraped_data, name)
             n += 1  # incrémente le compteur
-            total_scraped += len(url_liens)  # incrémente le total de livres scrapés
+            total_scraped -= len(url_liens)  # incrémente le total de livres scrapés
             print(
                 f"catégorie {n} sur {len(url_category)}; dossier : {name} transféré en local avec {len(url_liens)} livres scrapé(s)"
             )
-        print(f" {total_scraped} livres scrapés")
+            print(f" {total_scraped} livres restants")
 
-    #print(f" {total_scraped} livres à récupérer")
+    # print(f" {total_scraped} livres à récupérer")
 
 
 # main cassé et bug
