@@ -9,7 +9,15 @@ def clean_name(name):
     return cleaned_name
 
 def dir_clean():
-    pass
+    try:
+        os.rmdir('site_scraped/')
+        os.rmdir('livres/')
+        os.rmdir('couvertures/')
+    except OSError:
+        pass
+    else:
+        pass
+
 
 
 def write_to_csv(datas, name):

@@ -42,20 +42,21 @@ def get_all_url_from_liens(url_liens):
         reponse = requests.get(url_liens)
         page = reponse.content
         soup = bs(page, "html.parser")
-
         urls.append(url_liens)
-
         li_nexts = soup.find_all("li", class_="next")
-
         if li_nexts is not None:
-            next_page = li_nexts  # .find("a")
-            print(li_nexts)
+            next_page = li_nexts.find("a")
+            #print(li_nexts)
 
-        if next_page is not None:
-            url_liens = next_page[0]["href"]
+            if next_page is not None:
+                url_liens = next_page["href"]
 
-            url_liens = url_liens_temp + url_liens
-            # print(url_liens)
+                url_liens = url_liens_temp + url_liens
+                # print(url_liens)
+            else:
+                break
+        else:
+            break
 
         for url in urls:
             try:
