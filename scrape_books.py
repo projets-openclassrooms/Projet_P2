@@ -87,7 +87,9 @@ def get_cat_liens(url):
 
     for i in range(51):
         all_cat = soup.find("ul", class_="nav nav-list").find_all("li")[i].get_text(strip=True)
+
         datas.append(all_cat)
+        print(len(all_cat))
 
         print(datas)
     # isole la classe nav nav-list de la balise ul
