@@ -108,7 +108,7 @@ def get_cat_liens(url):
     # href = href["href"]  # extrait la valeur seule de href
     #    url = f"{home_url}{href}"
     #    data.append(url)  # ajoute l'url à la liste de données à retourner
-    # datas.pop(0)
+    datas.pop(0)
 
     return datas
 
