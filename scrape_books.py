@@ -37,7 +37,7 @@ def get_all_pages(liens):
     urls = []
     categories = []
     url_liens_temp = url_liens.split("index")[0]
-    print (url_liens_temp, url_liens)
+    print(url_liens_temp, url_liens)
     while True:
         reponse = requests.get(url_liens)
         page = reponse.content
@@ -85,21 +85,24 @@ def get_cat_liens(url):
     # page = reponse.content  # créé une variable avec le contenu de cette réponse
     soup = bs(reponse.content, "html.parser")
     datas = []  # initialisation de la liste qui stocke les urls
-    #name_categories = [] # initialisation des noms des categories
+    # name_categories = [] # initialisation des noms des categories
 
     for i in range(51):
-        #name_cat = soup.find("ul", class_="nav nav-list").find_all("li")[i].get_text(strip=True)
+        name_cat = soup.find("ul", class_="nav nav-list").find_all("li")[i].get_text(strip=True)
 
         all_cat = soup.find("ul", class_="nav nav-list").findAll('a')[i]['href'][:]
-        #name_categories.append(name_cat)
+        # name_categories.append(name_cat)
 
-        datas.append(all_cat)
+        # datas.append(all_cat)
+        dict_categories = {'name': name_cat, 'url_cat': all_cat}
+        datas.append(dict_categories)
+
 
     datas.pop(0)
-    #name_categories.pop(0)
+    # name_categories.pop(0)
+
 
     return datas
-
 
 """
 # to run the script. 
@@ -112,7 +115,7 @@ def main():
     print(f"démarrage du scan du site {home_url}")
 
     url_category = get_cat_liens(home_url)
-    #print(len(url_category), "catégorires scrapées")
+    # print(len(url_category), "catégorires scrapées")
 
     question = input("Voulez-vous tester une catégorie ? O/N ")
     if str.lower(question) == "o":
@@ -124,12 +127,12 @@ def main():
         choix = input("Merci d'indiquer une catégorie de 0 à 49 :")
         choix_url = url_category[int(choix)]
         print(choix_url, " choisi")
-        name= "Toto"
-        #match = re.search(r"\/([^\/]+)_\d+\/", choix_url)
-        #name = match.group(1)
+        name = "Toto"
+        # match = re.search(r"\/([^\/]+)_\d+\/", choix_url)
+        # name = match.group(1)
 
-        #scraped_data = scrap_from_url(choix_url, name)
-        #write_to_csv(scraped_data, name)
+        # scraped_data = scrap_from_url(choix_url, name)
+        # write_to_csv(scraped_data, name)
 
 
     else:
@@ -153,69 +156,13 @@ def main():
             )
             print(f" {total_scraped} livres restants")
 
-    # print(f" {total_scraped} livres à récupérer")
-
-
-# main cassé et bug
-# def main():
-#     total_scraped = 0
-#     n = 0  # compteur
-#     print(f"démarrage du scan du site {home_url}")
-#
-#     url_home = f"{home_url}index.html"  # url de l'accueil du site
-#     url_category = get_all_liens(url_home)
-#     question = input("Voulez-vous tester une catégorie ? O/N ")
-#     if str.lower(question) == "o":
-#         i=0
-#         for url in url_category:
-#             print(i, "+"*2, url)
-#             i+=1
-#             choix = input("Merci d'indiquer une catégorie de 0 à 49 :")
-#             url_categorie = url_category[int(choix)]
-#         match = re.search(r"\/([^\/]+)_\d+\/", url_categorie)
-#         name = match.group(1)
-#         url_liens = get_all_url_from_liens(url_categorie)
-#         scraped_data = scrap_from_url(url_liens, name)
-#         write_to_csv(scraped_data, name)
-#         n += 1  # incrémente le compteur
-#         total_scraped += len(
-#             url_liens
-#         )  # incrémente le total de livres scrapés de la catégorie
-#         print(
-#             f"catégorie {n} sur {len(url_category)}; dossier : {name} transféré en local avec {len(url_liens)} livres scrapé(s)"
-#         )
-#         clear()
-#     else:
-#         print("scrape de toutes les catégories du site")
-#         #print("liens des catégories  sauf le home : ",url_category)
-#         for url in url_category:
-#             print("url", url)
-#             match = re.search(r"\/([^\/]+)_\d+\/", url)
-#             name = match.group(1)
-#             print(name, ":")
-#             url_liens = get_all_url_from_liens(url)
-#             for url_book in url_liens:
-#
-#                 scraped_data = scrap_from_url(url_liens, name)
-#                 write_to_csv(scraped_data, name)
-#             n += 1  # incrémente le compteur
-#             total_scraped += len(url_liens)  # incrémente le total de livres scrapés
-#             print(
-#                 f"catégorie {n} sur {len(url_category)}; dossier : {name} transféré en local avec {len(url_liens)} livres scrapé(s)"
-#             )
-#     print(f" {total_scraped} livres scrapés")
 
 
 if __name__ == "__main__":
     try:
-        #dir_clean()  # efface et cree les repertoires de stockage
+        # dir_clean()  # efface et cree les repertoires de stockage
         main()
 
 
     except KeyboardInterrupt:
         print("Programme arrêté manuellement.")
-"""
-si pages > 1:
-    
-
-"""
