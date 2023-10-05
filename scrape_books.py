@@ -97,12 +97,11 @@ def get_cat_liens(url):
         dict_categories = {'name': name_cat, 'url_cat': all_cat}
         datas.append(dict_categories)
 
-
     datas.pop(0)
     # name_categories.pop(0)
 
-
     return datas
+
 
 """
 # to run the script. 
@@ -121,12 +120,12 @@ def main():
     if str.lower(question) == "o":
         i = 0
         for url in url_category:
-            print(i, "+" * 2, url)
+            print(i, "+" * 2, url['name'], "=" * 2, url['url_cat'])
             i += 1
 
-        choix = input("Merci d'indiquer une catégorie de 0 à 49 :")
+        choix = input("Merci d'indiquer une catégorie de 0 à 49: ")
         choix_url = url_category[int(choix)]
-        print(choix_url, " choisi")
+        print(choix_url['name'], "=" * 2, choix_url['url_cat'], " choisi")
         name = "Toto"
         # match = re.search(r"\/([^\/]+)_\d+\/", choix_url)
         # name = match.group(1)
@@ -155,7 +154,6 @@ def main():
                 f"catégorie {compteur} sur {len(url_category)}; dossier : {name} transféré : {len(url_liens)} livres."
             )
             print(f" {total_scraped} livres restants")
-
 
 
 if __name__ == "__main__":
