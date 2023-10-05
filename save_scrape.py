@@ -16,7 +16,9 @@ def dir_clean():
     except OSError:
         pass
     else:
-        pass
+        os.mkdir('site_scraped/')
+        os.mkdir('livres/')
+        os.mkdir('couvertures/')
 
 
 

@@ -80,13 +80,11 @@ def get_cat_liens(url):
     reponse = requests.get(url)
 
     # page = reponse.content  # créé une variable avec le contenu de cette réponse
-    soup = bs(
-        reponse.content, "html.parser"
-    )  # parse la variable via le parser de BeautifulSoup (gagner en lisibilité)
+    soup = bs(reponse.content, "html.parser")
     datas = []  # initialisation de la liste qui stocke les urls
 
     for i in range(51):
-        #all_cat = soup.find("ul", class_="nav nav-list").find_all("li")[i].get_text(strip=True)
+        # all_cat = soup.find("ul", class_="nav nav-list").find_all("li")[i].get_text(strip=True)
         all_cat = soup.find("ul", class_="nav nav-list").findAll('a')[i]['href'][:]
 
         datas.append(all_cat)
@@ -122,18 +120,21 @@ def main():
     total_scraped = 1000  # 1000 à recuperer 20 pages * 50 livres
     compteur = 0  # init compteur
     print(f"démarrage du scan du site {home_url}")
-    dir_clean()  # existent ou pas donc efface et cree
+    dir_clean()  # efface et cree les repertoires de stockage
     url_category = get_cat_liens(home_url)
-    print(len(url_category), "catégorires scrapées")
+    #print(len(url_category), "catégorires scrapées")
+
     question = input("Voulez-vous tester une catégorie ? O/N ")
     if str.lower(question) == "o":
         i = 0
         for url in url_category:
             print(i, "+" * 2, url)
             i += 1
-            choix = input("Merci d'indiquer une catégorie de 0 à 49 :")
-            choix_url = url_category[int(choix)]
-            print(choix_url, " choisi")
+
+        choix = input("Merci d'indiquer une catégorie de 0 à 49 :")
+        choix_url = url_category[int(choix)]
+        print(choix_url, " choisi")
+
     else:
         print("scrape de toutes les catégories du site")
         # print("liens des catégories sauf le home : " ,url_category)
