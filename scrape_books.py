@@ -77,19 +77,25 @@ def get_all_url_from_liens(url_liens):
 
 
 def get_cat_liens(url):
+    # recuperation sous forme de liste les liens url / categories à selectionner
+    # selection des noms des categories 'name_categories'
     reponse = requests.get(url)
 
     # page = reponse.content  # créé une variable avec le contenu de cette réponse
     soup = bs(reponse.content, "html.parser")
     datas = []  # initialisation de la liste qui stocke les urls
+    #name_categories = [] # initialisation des noms des categories
 
     for i in range(51):
-        # all_cat = soup.find("ul", class_="nav nav-list").find_all("li")[i].get_text(strip=True)
+        #name_cat = soup.find("ul", class_="nav nav-list").find_all("li")[i].get_text(strip=True)
+
         all_cat = soup.find("ul", class_="nav nav-list").findAll('a')[i]['href'][:]
+        #name_categories.append(name_cat)
 
         datas.append(all_cat)
 
     datas.pop(0)
+    #name_categories.pop(0)
 
     return datas
 
