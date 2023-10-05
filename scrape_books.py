@@ -126,12 +126,12 @@ def main():
         choix = input("Merci d'indiquer une catégorie de 0 à 49: ")
         choix_url = url_category[int(choix)]
         print(choix_url['name'], "=" * 2, choix_url['url_cat'], " choisi")
-        name = "Toto"
+
         # match = re.search(r"\/([^\/]+)_\d+\/", choix_url)
         # name = match.group(1)
 
-        # scraped_data = scrap_from_url(choix_url, name)
-        # write_to_csv(scraped_data, name)
+        scraped_data = scrap_from_url(choix_url, name)
+        write_to_csv(scraped_data, name)
 
 
     else:
