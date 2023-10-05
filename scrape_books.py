@@ -89,23 +89,6 @@ def get_cat_liens(url):
 
         datas.append(all_cat)
 
-    # isole la classe nav nav-list de la balise ul
-    # all_cat = all_cat.strip(" \n ").rstrip(" \n ")
-    # print(all_cat)
-
-    # hrefs = all_cat.find_all(href)
-    # for cat in all_cat:
-    #     data = cat.find("a", href=True).content
-    #     data = str(data).strip().replace(" ", "-").lower()
-    #     datas.append(data)
-    #
-    # print(datas)
-    # hrefs = soup.find("ul", class_="nav nav-list")
-    # for href in hrefs:  # parcourt les valeurs des hrefs extraits au dessus
-    # print(href)
-    # href = href["href"]  # extrait la valeur seule de href
-    #    url = f"{home_url}{href}"
-    #    data.append(url)  # ajoute l'url à la liste de données à retourner
     datas.pop(0)
 
     return datas

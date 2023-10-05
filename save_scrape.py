@@ -47,3 +47,4 @@ def write_to_csv(datas, name):
         for data in datas:
             writer.writerow(data)
             n += 1  # incrémente le compteur
+            print ('n', n)
