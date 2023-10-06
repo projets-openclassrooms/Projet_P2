@@ -1,7 +1,7 @@
 import csv
 import os
 from pathlib import Path
-
+import slugify
 # ecrit les données dans un fichier csv à partir des données et du nom désiré du fichier
 current_dir = os.path.dirname(__file__)
 folder = os.path.join(current_dir, "/", "site_scraped")

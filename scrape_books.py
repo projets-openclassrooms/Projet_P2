@@ -54,7 +54,6 @@ def main():
         # script pour charger les données dans un csv
         # write_to_csv(scraped_data, name)
 
-
     else:
         print("scrape de toutes les catégories du site")
         # print("liens des catégories sauf le home : " ,url_category)
