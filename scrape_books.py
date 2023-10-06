@@ -40,14 +40,14 @@ def main():
         choix = input("Merci d'indiquer une catégorie de 0 à 49: ")
         choix_url = url_category[int(choix)]
         choisi = choix_url['url_cat']
-        print(choix_url['name'], "=" * 2, choisi, " choisi")
+        print(choix_url['name'], "=" * 2, choisi, " choisi.")
         liens = (f"{home_url}{choisi}")
 
-        # match = re.search(r"\/([^\/]+)_\d+\/", choix_url)
-        # name = match.group(1)
+
         scraped_data = scrap_category(liens)
 
         # scraped_data = scrap_from_url(choix_url, name)
+
         # script pour charger les données dans un csv
         # write_to_csv(scraped_data, name)
 
