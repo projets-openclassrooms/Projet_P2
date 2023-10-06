@@ -47,6 +47,7 @@ def main():
         liens = (f"{home_url}{choisi}")
 
         scraped_data = scrap_category(liens)
+        parse_url = scrap_from_url(get_book_info_from_url(liens))
 
         # scraped_data = books_url(choix_url, name)
 
@@ -62,6 +63,7 @@ def main():
             # match = re.search(r"\/([^\/]+)_\d+\/", url)
             # name = match.group(1)
             print(liens, ":")
+            parse_url = scrap_from_url(get_book_info_from_url(liens))
             # url_liens = get_all_pages(liens)
             # for url_book in url_liens:
             #     print('book', url_book)

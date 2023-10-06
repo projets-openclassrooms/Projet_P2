@@ -4,8 +4,6 @@ import requests
 from bs4 import BeautifulSoup as bs
 
 
-
-
 # convertit le rating d'un str de lettres en int
 def rating_to_int(rating):
     rating_map = {"Zero": 0, "One": 1, "Two": 2, "Three": 3, "Four": 4, "Five": 5}
@@ -70,6 +68,8 @@ def pager(url):
         print(li_nexts[0], 'livre à récupérer.')
     else:
         print(li_nexts[0], 'livres à récupérer.')
+        nblivres = int(li_nexts[0])
+        return nblivres
     if li_nexts is not None:
         # next_page = li_nexts.find("strong")
         # print(next_page)
@@ -83,70 +83,48 @@ def pager(url):
         nb_pages = soup.find("ul", attrs="pager").text.strip().split()
         if nb_pages is not None:
             print(int(nb_pages[3]))
+            
     else:
         print("nope")
 
+def get_book_info_from_url(link):
+    response = requests.get(url)
+    parse_url = bs(response.content, features='html.parser')
+    return parse_url
 
-def scrap_from_url(url, name):
+def scrap_from_url(parse_url):
     result = []  # init liste de la catégorie
 
     data = []  # init d'une liste d'1 livre
 
-    reponse = requests.get(url)
-    page = reponse.content
 
-    soup = bs(page, "html.parser")
 
-    product_page_url = url
-    data.append(product_page_url)
 
-    upc = soup.find("th", string="UPC")
-    upc = upc.find_next("td").string.strip()
-    data.append(upc)
-
-    title = soup.find("h1").text.strip()
-    data.append(title)
-
-    # même principe que pour l'UPC
-    price_including_tax = soup.find("th", string="Price (incl. tax)")
-    price_including_tax = price_including_tax.find_next("td").string.strip()
-    data.append(price_including_tax)
-
-    # même principe que pour l'UPC
-    price_excluding_tax = soup.find("th", string="Price (excl. tax)")
-    price_excluding_tax = price_excluding_tax.find_next("td").string.strip()
-    data.append(price_excluding_tax)
-
-    # même principe que pour l'UPC
-    number_available = soup.find("th", string="Availability")
-    number_available = number_available.find_next("td").string.strip()
-    number_available = re.search(r"\d+", number_available).group()
-    data.append(number_available)
-
-    product_description = soup.find("meta", attrs={"name": "description"})
-    product_description = product_description["content"].strip()
-    data.append(product_description)
-
-    category = soup.find(
-        "a", href=re.compile(r"/category/books/([\w-]+)/index.html")
-    ).string.strip()
-    data.append(category)
-
-    review_rating = soup.find("p", class_=re.compile(r"star-rating\s+(\w+)"))
-    review_rating = re.search(r"\b(\w+)\b", review_rating["class"][1]).group(1)
-    review_rating = review_rating.strip()
+    title = parse_url.h1.text.lower()
+    upc = parse_url.select('#product_description ~ table td')[0].text
+    title = parse_url.h1.text.lower()
+    price_incl_tax = parse_url.select('#product_description ~ table td')[2].text
+    price_excl_tax = parse_url.select('#product_description ~ table td')[3].text
+    stock = parse_url.select('#product_description ~ table td')[5].text.replace('In stock (', '').replace('available)', '')
+    description = parse_url.select("p")[3].text
+    category = parse_url.select("a")[3].text
+    review_rating = parse_url.find_all("p", class_="star-rating")[0].get("class")[1]
     review_rating = rating_to_int(review_rating)
-    data.append(review_rating)
+    image_url = url + parse_url.find("div", class_="item active").img["src"].replace('../', '')
+#rubriques à recuperer sous forme de dictionnaire pour eviter les doublons plutot que listes
+    return {
+        'product_page_url': url,
+        'universal_ product_code (upc)': upc,
+        'title': title,
+        'price_incl_tax': price_incl_tax,
+        'price_excl_tax': price_excl_tax,
+        'number_available': stock,
+        'product_description': description,
+        'category': category,
+        'review_rating': review_rating,
+        'image_url': image_url
+    }
 
-    image_url = soup.find("img")["src"]
-    image_url = image_url.replace("../", "")  # on retire les ../../ au début du lien
-    image_url = "https://books.toscrape.com/" + image_url
-    data.append(image_url)
-
-    download_img(image_url, title, name)
-
-    result.append(data)
-    return result
 
 
 # def get_all_pages(liens):
@@ -223,9 +201,13 @@ def get_cat_liens(url):
 """
 # to run the script. 
 """
-
+url = "https://books.toscrape.com/catalogue/the-long-shadow-of-small-ghosts-murder-and-memory-in-an-american-city_848/index.html"
 
 def scrap_category(choix):
     print(choix)
     pager(choix)
     print()
+
+#parse_url=get_book_info_from_url(liens)
+
+#print(scrap_from_url(parse_url))
