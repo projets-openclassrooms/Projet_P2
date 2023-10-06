@@ -11,6 +11,7 @@ def rating_to_int(rating):
     rating_map = {"Zero": 0, "One": 1, "Two": 2, "Three": 3, "Four": 4, "Five": 5}
     return rating_map.get(rating, rating)
 
+
 def clean_name(name):
     cleaned_name = re.sub(r'[<>;:"/\\|?*]', "-", name)
     return cleaned_name
@@ -35,6 +36,7 @@ def download_img(img_url, name, category):
             print("Téléchargement de l'image.", name)
 
         images.write(response.content)
+
 
 # download_img('https://books.toscrape.com/catalogue/sharp-objects_997/index.html','Sharp Objects','mystery')
 
