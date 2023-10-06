@@ -6,17 +6,20 @@ from scrape_infos import *
 Ce version alpha sert à récupérer :
     - soit toutes les infos concernant un livre,
     - soit les infos concernant tous les livres du site books.toscrape.com
-
+selon la méthode Extract Transform Load
+Extract :
     urls = []  # initialisation de la liste servant à stocker nos urls
     categories = []  # initialisation de la liste des datas
-    main_url = "https://books.toscrape.com/"
+    home_url = "https://books.toscrape.com/"
     h3_tags = soup.find_all("h3")
     récupère les balises h3 contenant les urls des livres
+Transform :
     retire les ../../ en début d'url
     retourne une liste complete d'url
     get_all_url_from_liens(url_liens)
-# sert à récupérer chacune des catégories du site
-# retourne liste de catégories
+    :return noms, liens, UPC, noms des images, catégories 
+
+ retourne liste de catégories
    
     get_all_liens(url)
 # sert à récupérer les urls de chacune des catégories du site
@@ -32,49 +35,49 @@ home_url = "https://books.toscrape.com/"
 # gestion des erreurs de connection sommaire à revoir car bug
 
 
-def get_all_pages(liens):
-    url_liens = liens
-    urls = []
-    categories = []
-    url_liens_temp = url_liens.split("index")[0]
-    print(url_liens_temp, url_liens)
-    while True:
-        reponse = requests.get(url_liens)
-        page = reponse.content
-        soup = bs(page, "html.parser")
-        urls.append(url_liens)
-        li_nexts = soup.find_all("li", class_="next")
-        if li_nexts is not None:
-            next_page = li_nexts.find("a")
-            # print(li_nexts)
-
-            if next_page is not None:
-                url_liens = next_page["href"]
-
-                url_liens = url_liens_temp + url_liens
-                # print(url_liens)
-            else:
-                break
-        else:
-            break
-
-        for url in urls:
-            reponse = requests.get(url)
-
-            page = reponse.content
-            soup = bs(page, "html.parser")
-
-            h3_tags = soup.find_all("h3")
-            # récupère les balises h3 contenant les urls des livres
-            # retire les ../../ en début d'url
-            # retourne une liste complete d'url
-            for h3_tag in h3_tags:
-                link_tag = h3_tag.a
-                href_value = link_tag["href"].replace("../", "")
-                href_value = f"{home_url}catalogue/{href_value}"
-                categories.append(href_value)
-
-    return categories
+# def get_all_pages(liens):
+#     url_liens = liens
+#     urls = []
+#     categories = []
+#     url_liens_temp = url_liens
+#     print(url_liens_temp, url_liens)
+#     while True:
+#         reponse = requests.get(url_liens)
+#         page = reponse.content
+#         soup = bs(page, "html.parser")
+#         urls.append(url_liens)
+#         li_nexts = soup.find_all("li", class_="next")
+#         if li_nexts is not None:
+#             next_page = li_nexts.find("a")
+#             # print(li_nexts)
+#
+#             if next_page is not None:
+#                 url_liens = next_page["href"]
+#
+#                 url_liens = url_liens_temp + url_liens
+#                 # print(url_liens)
+#             else:
+#                 break
+#         else:
+#             break
+#
+#         for url in urls:
+#             reponse = requests.get(url)
+#
+#             page = reponse.content
+#             soup = bs(page, "html.parser")
+#
+#             h3_tags = soup.find_all("h3")
+#             # récupère les balises h3 contenant les urls des livres
+#             # retire les ../../ en début d'url
+#             # retourne une liste complete d'url
+#             for h3_tag in h3_tags:
+#                 link_tag = h3_tag.a
+#                 href_value = link_tag["href"].replace("../", "")
+#                 href_value = f"{home_url}catalogue/{href_value}"
+#                 categories.append(href_value)
+#
+#     return categories
 
 
 def get_cat_liens(url):
@@ -106,7 +109,8 @@ def get_cat_liens(url):
 """
 # to run the script. 
 """
-
+def scrap_category(choix):
+    print(choix)
 
 def main():
     total_scraped = 1000  # 1000 à recuperer 20 pages * 50 livres
@@ -125,35 +129,38 @@ def main():
 
         choix = input("Merci d'indiquer une catégorie de 0 à 49: ")
         choix_url = url_category[int(choix)]
-        print(choix_url['name'], "=" * 2, choix_url['url_cat'], " choisi")
+        choisi = choix_url['url_cat']
+        print(choix_url['name'], "=" * 2, choisi, " choisi")
+        liens = (f"{home_url}" + url['url_cat'])
 
         # match = re.search(r"\/([^\/]+)_\d+\/", choix_url)
         # name = match.group(1)
+        scraped_data = scrap_category(liens)
 
-        scraped_data = scrap_from_url(choix_url, name)
-        write_to_csv(scraped_data, name)
+        #scraped_data = scrap_from_url(choix_url, name)
+        #write_to_csv(scraped_data, name)
 
 
     else:
         print("scrape de toutes les catégories du site")
         # print("liens des catégories sauf le home : " ,url_category)
         for url in url_category:
-            print("url", url)
-            match = re.search(r"\/([^\/]+)_\d+\/", url)
-            name = match.group(1)
-            print(name, ":")
-            url_liens = get_all_pages(url)
-            for url_book in url_liens:
-                print('book', url_book)
-                scraped_data = scrap_from_url(url_liens, name)
-                write_to_csv(scraped_data, name)
+            liens = (f"{home_url}"+url['url_cat'])
+            # match = re.search(r"\/([^\/]+)_\d+\/", url)
+            # name = match.group(1)
+            # print(name, ":")
+            url_liens = get_all_pages(liens)
+            # for url_book in url_liens:
+            #     print('book', url_book)
+            #     scraped_data = scrap_from_url(url_liens, name)
+            #     write_to_csv(scraped_data, name)
 
-            compteur += 1  # incrémente le compteur
-            total_scraped -= len(url_liens)  # incrémente le total de livres scrapés
-            print(
-                f"catégorie {compteur} sur {len(url_category)}; dossier : {name} transféré : {len(url_liens)} livres."
-            )
-            print(f" {total_scraped} livres restants")
+            # compteur += 1  # incrémente le compteur
+            # total_scraped -= len(url)  # incrémente le total de livres scrapés
+            # print(
+            #     f"catégorie {compteur} sur {len(url_category)}; dossier : {name} transféré : {len(url_liens)} livres."
+            # )
+            # print(f" {total_scraped} livres restants")
 
 
 if __name__ == "__main__":
