@@ -1,6 +1,5 @@
 import csv
 import os
-import shutil
 from pathlib import Path
 
 # ecrit les données dans un fichier csv à partir des données et du nom désiré du fichier

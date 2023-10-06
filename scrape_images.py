@@ -1,5 +1,6 @@
 import os
 import re
+
 import requests
 
 """
@@ -36,6 +37,5 @@ def download_img(img_url, name, category):
             print("Téléchargement de l'image.", name)
 
         images.write(response.content)
-
 
 # download_img('https://books.toscrape.com/catalogue/sharp-objects_997/index.html','Sharp Objects','mystery')

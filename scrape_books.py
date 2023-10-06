@@ -1,37 +1,24 @@
 # -*- coding: utf-8 -*-
-from save_scrape import *
 from scrape_infos import *
 
 """
-Ce version alpha sert à récupérer :
+Ce version béta sert à récupérer :
     - soit toutes les infos concernant un livre,
     - soit les infos concernant tous les livres du site books.toscrape.com
 selon la méthode Extract Transform Load
 Extract :
-    urls = []  # initialisation de la liste servant à stocker nos urls
-    categories = []  # initialisation de la liste des datas
     home_url = "https://books.toscrape.com/"
-    h3_tags = soup.find_all("h3")
-    récupère les balises h3 contenant les urls des livres
+    url_category = get_cat_liens(home_url)
+ 
 Transform :
-    retire les ../../ en début d'url
-    retourne une liste complete d'url
-    get_all_url_from_liens(url_liens)
+    scrap_category(liens)
     :return noms, liens, UPC, noms des images, catégories 
 
- retourne liste de catégories
-   
-    get_all_liens(url)
-# sert à récupérer les urls de chacune des catégories du site
-# réitère même opération que pour les catégories
-# retourne url de la catégorie
-
-  # utilisation d'une regex pour isoler le nom de la catégorie dans l'url
+Load:
+    write_to_csv(upc)   
 
 """
 home_url = "https://books.toscrape.com/"
-
-
 
 
 def main():
@@ -60,20 +47,20 @@ def main():
         # name = match.group(1)
         scraped_data = scrap_category(liens)
 
-        #scraped_data = scrap_from_url(choix_url, name)
-        #script pour charger les données dans un csv
-        #write_to_csv(scraped_data, name)
+        # scraped_data = scrap_from_url(choix_url, name)
+        # script pour charger les données dans un csv
+        # write_to_csv(scraped_data, name)
 
 
     else:
         print("scrape de toutes les catégories du site")
         # print("liens des catégories sauf le home : " ,url_category)
         for url in url_category:
-            liens = (f"{home_url}"+url['url_cat'])
+            liens = (f"{home_url}" + url['url_cat'])
             # match = re.search(r"\/([^\/]+)_\d+\/", url)
             # name = match.group(1)
             print(liens, ":")
-            #url_liens = get_all_pages(liens)
+            # url_liens = get_all_pages(liens)
             # for url_book in url_liens:
             #     print('book', url_book)
             #     scraped_data = scrap_from_url(url_liens, name)

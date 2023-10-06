@@ -2,6 +2,7 @@ import re
 
 import requests
 from bs4 import BeautifulSoup as bs
+
 from scrape_images import download_img
 
 
@@ -37,25 +38,26 @@ def pager(url):
     #                                                   recherche href et transform book info
 
     li_nexts = soup.find('form', class_="form-horizontal").text.strip().split()
-    if int(li_nexts[0])== 1:
+    if int(li_nexts[0]) == 1:
         print(li_nexts[0], 'livre à récupérer.')
     else:
         print(li_nexts[0], 'livres à récupérer.')
     if li_nexts is not None:
-        #next_page = li_nexts.find("strong")
-        #print(next_page)
+        # next_page = li_nexts.find("strong")
+        # print(next_page)
         pass
 
 
     else:
-        print('nope!'*3)
+        print('nope!' * 3)
 
     if soup.find("ul", attrs="pager"):
-        nb_pages= soup.find("ul", attrs="pager").text.strip().split()
+        nb_pages = soup.find("ul", attrs="pager").text.strip().split()
         if nb_pages is not None:
             print(int(nb_pages[3]))
     else:
         print("nope")
+
 
 def scrap_from_url(url, name):
     result = []  # init liste de la catégorie
@@ -117,6 +119,8 @@ def scrap_from_url(url, name):
 
     result.append(data)
     return result
+
+
 # def get_all_pages(liens):
 #     url_liens = liens
 #     urls = []
@@ -191,6 +195,8 @@ def get_cat_liens(url):
 """
 # to run the script. 
 """
+
+
 def scrap_category(choix):
     print(choix)
     pager(choix)
