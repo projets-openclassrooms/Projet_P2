@@ -24,6 +24,21 @@ def rating_to_int(rating):
 # - image_url
 # resultat sous forme de liste
 
+def pager(url):
+    response = requests.get(url)
+
+    # page = reponse.content  # créé une variable avec le contenu de cette réponse
+    soup = bs(response.content, "html.parser")
+    # si not pager
+    #       i= 1
+    #       si li class current de ul class pager = page 1 of 2
+    #                                               resultat = nbrepages> 1
+    #                                               for resultat:
+    #                                                   recherche href et transform book info
+
+    nb_pages = soup.find("ul", class_="pager")
+    if nb_pages is not None:
+        print(nb_pages)
 
 def scrap_from_url(url, name):
     result = []  # init liste de la catégorie

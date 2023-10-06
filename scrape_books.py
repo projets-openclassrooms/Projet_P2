@@ -105,18 +105,13 @@ def get_cat_liens(url):
 
     return datas
 
-def pager():
-# si not pager
-#       i= 1
-#       si li class current de ul class pager = page 1 of 2
-#                                               resultat = nbrepages> 1
-#                                               for resultat:
-#                                                   recherche href et transform book info
+
 """
 # to run the script. 
 """
 def scrap_category(choix):
     print(choix)
+    pager(choix)
 
 def main():
     total_scraped = 1000  # 1000 à recuperer 20 pages * 50 livres
@@ -138,7 +133,7 @@ def main():
         choix_url = url_category[int(choix)]
         choisi = choix_url['url_cat']
         print(choix_url['name'], "=" * 2, choisi, " choisi")
-        liens = (f"{home_url}" + url['url_cat'])
+        liens = (f"{home_url}{choisi}")
 
         # match = re.search(r"\/([^\/]+)_\d+\/", choix_url)
         # name = match.group(1)
