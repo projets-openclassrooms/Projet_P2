@@ -3,7 +3,7 @@ import re
 import requests
 from bs4 import BeautifulSoup as bs
 
-from scrape_images import download_img
+
 
 
 # convertit le rating d'un str de lettres en int

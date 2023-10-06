@@ -48,7 +48,7 @@ def main():
 
         scraped_data = scrap_category(liens)
 
-        # scraped_data = scrap_from_url(choix_url, name)
+        # scraped_data = books_url(choix_url, name)
 
         # script pour charger les données dans un csv
         # write_to_csv(scraped_data, name)
@@ -65,7 +65,7 @@ def main():
             # url_liens = get_all_pages(liens)
             # for url_book in url_liens:
             #     print('book', url_book)
-            #     scraped_data = scrap_from_url(url_liens, name)
+            #     scraped_data = books_url(url_liens, name)
             #     write_to_csv(scraped_data, name)
 
             # compteur += 1  # incrémente le compteur
