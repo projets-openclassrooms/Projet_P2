@@ -7,14 +7,17 @@ Ce version béta sert à récupérer :
     - soit les infos concernant tous les livres du site books.toscrape.com
 selon la méthode Extract Transform Load
 Extract :
+    scrape_books.py
     home_url = "https://books.toscrape.com/"
     url_category = get_cat_liens(home_url)
  
 Transform :
+    scrape_infos.py
     scrap_category(liens)
     :return noms, liens, UPC, noms des images, catégories 
 
 Load:
+    save_scrape.py
     write_to_csv(upc)   
 
 """
