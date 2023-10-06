@@ -116,9 +116,10 @@ def main():
     total_scraped = 1000  # 1000 à recuperer 20 pages * 50 livres
     compteur = 0  # init compteur
     print(f"démarrage du scan du site {home_url}")
-
+    # recherche des categories
     url_category = get_cat_liens(home_url)
-    # print(len(url_category), "catégorires scrapées")
+    # print(len(url_category), "catégorires scrapées") = 50
+    # menu pour sélectionner 1 catégorie sur 50 (liste de 0 à 49)
 
     question = input("Voulez-vous tester une catégorie ? O/N ")
     if str.lower(question) == "o":
@@ -126,7 +127,7 @@ def main():
         for url in url_category:
             print(i, "+" * 2, url['name'], "=" * 2, url['url_cat'])
             i += 1
-
+        # input pour choisir la catégorie à transformer
         choix = input("Merci d'indiquer une catégorie de 0 à 49: ")
         choix_url = url_category[int(choix)]
         choisi = choix_url['url_cat']
@@ -138,6 +139,7 @@ def main():
         scraped_data = scrap_category(liens)
 
         #scraped_data = scrap_from_url(choix_url, name)
+        #script pour charger les données dans un csv
         #write_to_csv(scraped_data, name)
 
 
@@ -148,8 +150,8 @@ def main():
             liens = (f"{home_url}"+url['url_cat'])
             # match = re.search(r"\/([^\/]+)_\d+\/", url)
             # name = match.group(1)
-            # print(name, ":")
-            url_liens = get_all_pages(liens)
+            print(liens, ":")
+            #url_liens = get_all_pages(liens)
             # for url_book in url_liens:
             #     print('book', url_book)
             #     scraped_data = scrap_from_url(url_liens, name)
