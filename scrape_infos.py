@@ -111,7 +111,7 @@ def scrap_from_url(parse_url):
     review_rating = parse_url.find_all("p", class_="star-rating")[0].get("class")[1]
     review_rating = rating_to_int(review_rating)
     image_url = url + parse_url.find("div", class_="item active").img["src"].replace('../', '')
-#rubriques à recuperer sous forme de dictionnaire pour eviter les doublons plutot que listes
+    #rubriques à recuperer sous forme de dictionnaire pour eviter les doublons plutot que listes
     return {
         'product_page_url': url,
         'universal_ product_code (upc)': upc,
