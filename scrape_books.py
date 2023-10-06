@@ -43,7 +43,6 @@ def main():
         print(choix_url['name'], "=" * 2, choisi, " choisi.")
         liens = (f"{home_url}{choisi}")
 
-
         scraped_data = scrap_category(liens)
 
         # scraped_data = scrap_from_url(choix_url, name)
