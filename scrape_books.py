@@ -105,7 +105,13 @@ def get_cat_liens(url):
 
     return datas
 
-
+def pager():
+# si not pager
+#       i= 1
+#       si li class current de ul class pager = page 1 of 2
+#                                               resultat = nbrepages> 1
+#                                               for resultat:
+#                                                   recherche href et transform book info
 """
 # to run the script. 
 """
