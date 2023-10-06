@@ -36,10 +36,12 @@ def pager(url):
     #                                               for resultat:
     #                                                   recherche href et transform book info
 
-    li_nexts = soup.find('form', class_="form-horizontal")
+    li_nexts = soup.find('form', class_="form-horizontal").text.strip().split()
+    print(li_nexts[0], 'livres à récupérer.')
     if li_nexts is not None:
-        next_page = li_nexts.findAll("strong")
-        print(li_nexts)
+        #next_page = li_nexts.find("strong")
+        #print(next_page)
+        pass
 
 
     else:
@@ -112,3 +114,81 @@ def scrap_from_url(url, name):
 
     result.append(data)
     return result
+# def get_all_pages(liens):
+#     url_liens = liens
+#     urls = []
+#     categories = []
+#     url_liens_temp = url_liens
+#     print(url_liens_temp, url_liens)
+#     while True:
+#         reponse = requests.get(url_liens)
+#         page = reponse.content
+#         soup = bs(page, "html.parser")
+#         urls.append(url_liens)
+#         li_nexts = soup.find_all("li", class_="next")
+#         if li_nexts is not None:
+#             next_page = li_nexts.find("a")
+#             # print(li_nexts)
+#
+#             if next_page is not None:
+#                 url_liens = next_page["href"]
+#
+#                 url_liens = url_liens_temp + url_liens
+#                 # print(url_liens)
+#             else:
+#                 break
+#         else:
+#             break
+#
+#         for url in urls:
+#             reponse = requests.get(url)
+#
+#             page = reponse.content
+#             soup = bs(page, "html.parser")
+#
+#             h3_tags = soup.find_all("h3")
+#             # récupère les balises h3 contenant les urls des livres
+#             # retire les ../../ en début d'url
+#             # retourne une liste complete d'url
+#             for h3_tag in h3_tags:
+#                 link_tag = h3_tag.a
+#                 href_value = link_tag["href"].replace("../", "")
+#                 href_value = f"{home_url}catalogue/{href_value}"
+#                 categories.append(href_value)
+#
+#     return categories
+
+
+def get_cat_liens(url):
+    # recuperation sous forme de liste les liens url / categories à selectionner
+    # selection des noms des categories 'name_categories'
+    reponse = requests.get(url)
+
+    # page = reponse.content  # créé une variable avec le contenu de cette réponse
+    soup = bs(reponse.content, "html.parser")
+    datas = []  # initialisation de la liste qui stocke les urls
+    # name_categories = [] # initialisation des noms des categories
+
+    for i in range(51):
+        name_cat = soup.find("ul", class_="nav nav-list").find_all("li")[i].get_text(strip=True)
+
+        all_cat = soup.find("ul", class_="nav nav-list").findAll('a')[i]['href'][:]
+        # name_categories.append(name_cat)
+
+        # datas.append(all_cat)
+        dict_categories = {'name': name_cat, 'url_cat': all_cat}
+        datas.append(dict_categories)
+
+    datas.pop(0)
+    # name_categories.pop(0)
+
+    return datas
+
+
+"""
+# to run the script. 
+"""
+def scrap_category(choix):
+    print(choix)
+    pager(choix)
+    print()
