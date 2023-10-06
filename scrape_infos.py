@@ -36,9 +36,21 @@ def pager(url):
     #                                               for resultat:
     #                                                   recherche href et transform book info
 
-    nb_pages = soup.find("ul", class_="pager")
-    if nb_pages is not None:
-        print(nb_pages)
+    li_nexts = soup.find('form', class_="form-horizontal")
+    if li_nexts is not None:
+        next_page = li_nexts.findAll("strong")
+        print(li_nexts)
+
+
+    else:
+        print('nope!'*3)
+
+    if soup.find("ul", attrs="pager"):
+        nb_pages= soup.find("ul", attrs="pager").text.strip().split()
+        if nb_pages is not None:
+            print(int(nb_pages[3]))
+    else:
+        print("nope")
 
 def scrap_from_url(url, name):
     result = []  # init liste de la catégorie
