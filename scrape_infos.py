@@ -37,7 +37,10 @@ def pager(url):
     #                                                   recherche href et transform book info
 
     li_nexts = soup.find('form', class_="form-horizontal").text.strip().split()
-    print(li_nexts[0], 'livres à récupérer.')
+    if int(li_nexts[0])== 1:
+        print(li_nexts[0], 'livre à récupérer.')
+    else:
+        print(li_nexts[0], 'livres à récupérer.')
     if li_nexts is not None:
         #next_page = li_nexts.find("strong")
         #print(next_page)
