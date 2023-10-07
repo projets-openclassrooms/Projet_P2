@@ -35,6 +35,7 @@ def write_to_csv(datas):
     with open(file_path, "w", newline="", encoding="utf-8-sig") as file:
         writer = csv.writer(file, delimiter=";")
         writer.writerow(headers)
+        writer = csv.DictWriter(file,book_datas)
         n = 0  # initialise un compteur
 
         for data in datas:

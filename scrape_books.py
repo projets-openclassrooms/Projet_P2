@@ -49,9 +49,10 @@ def main():
 
         scraped_data = scrap_category(liens)
         parse_url = scrap_from_url(get_book_info_from_url(scraped_data))
-        for url_book in parse_url:
-            print('book', url_book)
-            scraped_data = get_book_info_from_url(url_book)
+        #for url_book in parse_url:
+        print('book', "++",parse_url['title'])
+        scraped_data = get_book_info_from_url(parse_url['product_page_url'])
+        print(scraped_data)
             #write_to_csv(scraped_data)
 
 
@@ -73,8 +74,8 @@ def main():
             # recursivite des donnees à recuperer
             for url_book in liens_book:
                 print('book', url_book)
-                scraped_data = get_book_info_from_url(url_book)
-                write_to_csv(scraped_data)
+                #scraped_data = get_book_info_from_url(url_book)
+                #write_to_csv(scraped_data)
 
             # compteur += 1  # incrémente le compteur
             # total_scraped -= len(url)  # incrémente le total de livres scrapés
