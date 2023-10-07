@@ -14,7 +14,7 @@ Extract :
 Transform :
     scrape_infos.py
     scrap_category(liens)
-    :return noms, liens, UPC, noms des images, catégories 
+    :return noms, liens, UPC, noms des images, catégories, etc...
 
 Load:
     save_scrape.py
@@ -45,6 +45,7 @@ def main():
         choisi = choix_url['url_cat']
         print(choix_url['name'], "=" * 2, choisi, " choisi.")
         liens = f"{home_url}{choisi}"
+        #1 choix x livres
 
         parse_url = scrap_from_url(get_book_info_from_url(liens))
         scraped_data = scrap_category(liens)
@@ -61,12 +62,12 @@ def main():
 
     else:
         print("scrape de toutes les catégories du site")
-        # print("liens des catégories sauf le home : " ,url_category)
+        print("liens des catégories sauf le home : " ,url_category)
         for liens_book in url_category:
             liens = (f"{home_url}" + liens_book['url_cat'])
             # match = re.search(r"\/([^\/]+)_\d+\/", url)
             # name = match.group(1)
-            # print(liens, ":")
+            print(liens, ":")
             parse_url = scrap_from_url(liens)
             # url_liens = get_all_pages(liens)
             # recursivite des donnees à recuperer
@@ -122,3 +123,8 @@ def exec():
         parse_url = scrap_from_url(liens)
         for url_book in liens_book:
             print('book', url_book)
+
+#home_url = books.toscrape.com
+#url book = home_url + id = write_revieew 'catalogue/ + a-light-in-the-attic_1000 + /index.html par exemple
+# url image = home_url + img src de div class =" item active"
+#url categorie = home_url + catalogue/category/books + {nom categorie} + page + nbre livres par categorie
