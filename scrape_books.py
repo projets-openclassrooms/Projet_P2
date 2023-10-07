@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
-from scrape_infos import *
 from save_scrape import *
+from scrape_infos import *
+
 """
 Ce version béta sert à récupérer :
     - soit toutes les infos concernant un livre,
@@ -44,10 +45,10 @@ def main():
         choix_url = url_category[int(choix)]
         choisi = choix_url['url_cat']
         print(choix_url['name'], "=" * 2, choisi, " choisi.")
-        liens = (f"{home_url}{choisi}")
+        liens = f"{home_url}{choisi}"
 
         scraped_data = scrap_category(liens)
-        parse_url = scrap_from_url(get_book_info_from_url(liens))
+        parse_url = scrap_from_url(get_book_info_from_url(scraped_data))
         for url_book in parse_url:
             print('book', url_book)
             scraped_data = get_book_info_from_url(url_book)
@@ -65,14 +66,14 @@ def main():
             liens = (f"{home_url}" + liens_book['url_cat'])
             # match = re.search(r"\/([^\/]+)_\d+\/", url)
             # name = match.group(1)
-            #print(liens, ":")
-            parse_url = scrap_from_url(get_book_info_from_url(liens))
+            # print(liens, ":")
+            parse_url = scrap_from_url(liens)
             # url_liens = get_all_pages(liens)
-            #recursivite des donnees à recuperer
+            # recursivite des donnees à recuperer
             for url_book in liens_book:
                 print('book', url_book)
                 scraped_data = get_book_info_from_url(url_book)
-                write_to_csv(scraped_data, name)
+                write_to_csv(scraped_data)
 
             # compteur += 1  # incrémente le compteur
             # total_scraped -= len(url)  # incrémente le total de livres scrapés
@@ -86,7 +87,6 @@ if __name__ == "__main__":
     try:
         # dir_clean()  # efface et cree les repertoires de stockage
         main()
-
 
     except KeyboardInterrupt:
         print("Programme arrêté manuellement.")

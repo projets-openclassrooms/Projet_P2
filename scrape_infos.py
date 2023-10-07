@@ -1,7 +1,5 @@
-import re
-import slugify
-
 import requests
+import slugify
 from bs4 import BeautifulSoup as bs
 
 
@@ -14,7 +12,6 @@ def rating_to_int(rating):
 def clean_name(name):
     cleaned_name = slugify(name)
     return cleaned_name
-
 
 
 # extrait les informations de livres d'une catégorie depuis liens urls :
@@ -62,36 +59,36 @@ def pager(url):
         nb_pages = soup.find("ul", attrs="pager").text.strip().split()
         if nb_pages is not None:
             print(int(nb_pages[3]))
-            
+
     else:
         print("nope")
+
 
 def get_book_info_from_url(link):
     response = requests.get(url)
     parse_url = bs(response.content, features='html.parser')
     return parse_url
 
+
 def scrap_from_url(parse_url):
     result = []  # init liste de la catégorie
 
     data = []  # init d'une liste d'1 livre
 
-
-
-
-    title = parse_url.h1.text.lower()
     upc = parse_url.select('#product_description ~ table td')[0].text
     title = parse_url.h1.text.lower()
     price_incl_tax = parse_url.select('#product_description ~ table td')[2].text
     price_excl_tax = parse_url.select('#product_description ~ table td')[3].text
-    stock = parse_url.select('#product_description ~ table td')[5].text.replace('In stock (', '').replace('available)', '')
+    stock = parse_url.select('#product_description ~ table td')[5].text.replace('In stock (', '').replace('available)',
+                                                                                                          '')
     description = parse_url.select("p")[3].text
+    description = description.replace(';', ',')
     category = parse_url.select("a")[3].text
     review_rating = parse_url.find_all("p", class_="star-rating")[0].get("class")[1]
     review_rating = rating_to_int(review_rating)
     image_url = url + parse_url.find("div", class_="item active").img["src"].replace('../', '')
-    #rubriques à recuperer sous forme de dictionnaire pour eviter les doublons plutot que listes
-    return {
+    # rubriques à recuperer sous forme de dictionnaire pour eviter les doublons plutot que listes
+    book_datas = {
         'product_page_url': url,
         'universal_ product_code (upc)': upc,
         'title': title,
@@ -103,7 +100,7 @@ def scrap_from_url(parse_url):
         'review_rating': review_rating,
         'image_url': image_url
     }
-
+    return book_datas
 
 
 # def get_all_pages(liens):
@@ -182,11 +179,12 @@ def get_cat_liens(url):
 """
 url = "https://books.toscrape.com/catalogue/the-long-shadow-of-small-ghosts-murder-and-memory-in-an-american-city_848/index.html"
 
+
 def scrap_category(choix):
     print(choix)
     pager(choix)
     print()
 
-#parse_url=get_book_info_from_url(liens)
+# parse_url=get_book_info_from_url(liens)
 
-#print(scrap_from_url(parse_url))
+# print(scrap_from_url(parse_url))
