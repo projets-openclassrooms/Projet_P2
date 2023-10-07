@@ -14,7 +14,7 @@ def dir_clean():
         Path(folder).parent.mkdir(exist_ok=True, parents=True)
 
 
-def write_to_csv(book_datas):
+def write_to_csv(datas):
     choix_url = {}
     # création des headers
 

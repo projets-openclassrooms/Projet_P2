@@ -81,9 +81,11 @@ def scrap_from_url(parse_url):
     price_excl_tax = parse_url.select('#product_description ~ table td')[3].text
     stock = parse_url.select('#product_description ~ table td')[5].text.replace('In stock (', '').replace('available)',
                                                                                                           '')
+    #description remplie d'espace au lieu du vide, nettoyee de ; pour eviter decalage colonne
     description = parse_url.select("p")[3].text
     description = description.replace(';', ',')
     category = parse_url.select("a")[3].text
+    # review_rating convertie en valeur entiere et non info
     review_rating = parse_url.find_all("p", class_="star-rating")[0].get("class")[1]
     review_rating = rating_to_int(review_rating)
     image_url = url + parse_url.find("div", class_="item active").img["src"].replace('../', '')
