@@ -52,7 +52,8 @@ def main():
         for url_book in parse_url:
             print('book', url_book)
             scraped_data = get_book_info_from_url(url_book)
-            write_to_csv(scraped_data)
+            #write_to_csv(scraped_data)
+
 
         # scraped_data = books_url(choix_url, name)
 
