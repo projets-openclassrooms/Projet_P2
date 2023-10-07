@@ -51,8 +51,8 @@ def main():
         parse_url = scrap_from_url(get_book_info_from_url(scraped_data))
         #for url_book in parse_url:
         print('book', "++",parse_url['title'])
-        scraped_data = get_book_info_from_url(parse_url['product_page_url'])
-        print(scraped_data)
+        #scraped_data = get_book_info_from_url(parse_url['product_page_url'])
+        #print(scraped_data)
             #write_to_csv(scraped_data)
 
 

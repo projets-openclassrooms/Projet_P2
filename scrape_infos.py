@@ -65,7 +65,7 @@ def pager(url):
 
 
 def get_book_info_from_url(link):
-    response = requests.get(url)
+    response = requests.get(link)
     parse_url = bs(response.content, features='html.parser')
     return parse_url
 
@@ -179,7 +179,7 @@ def get_cat_liens(url):
 """
 # to run the script. 
 """
-url = "https://books.toscrape.com/catalogue/the-long-shadow-of-small-ghosts-murder-and-memory-in-an-american-city_848/index.html"
+#url = "https://books.toscrape.com/catalogue/the-long-shadow-of-small-ghosts-murder-and-memory-in-an-american-city_848/index.html"
 
 
 def scrap_category(choix):
