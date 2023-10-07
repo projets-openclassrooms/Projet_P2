@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-from save_scrape import *
 from scrape_infos import *
 
 """
@@ -47,15 +46,13 @@ def main():
         print(choix_url['name'], "=" * 2, choisi, " choisi.")
         liens = f"{home_url}{choisi}"
 
-
         parse_url = scrap_from_url(get_book_info_from_url(liens))
         scraped_data = scrap_category(liens)
-        #for url_book in parse_url:
-        print('book', "++",parse_url['title'])
-        #scraped_data = get_book_info_from_url(parse_url['product_page_url'])
-        #print(scraped_data)
-            #write_to_csv(scraped_data)
-
+        # for url_book in parse_url:
+        print('book', "++", parse_url['title'])
+        # scraped_data = get_book_info_from_url(parse_url['product_page_url'])
+        # print(scraped_data)
+        # write_to_csv(scraped_data)
 
         # scraped_data = books_url(choix_url, name)
 
@@ -75,8 +72,8 @@ def main():
             # recursivite des donnees à recuperer
             for url_book in liens_book:
                 print('book', url_book)
-                #scraped_data = get_book_info_from_url(url_book)
-                #write_to_csv(scraped_data)
+                # scraped_data = get_book_info_from_url(url_book)
+                # write_to_csv(scraped_data)
 
             # compteur += 1  # incrémente le compteur
             # total_scraped -= len(url)  # incrémente le total de livres scrapés
@@ -93,6 +90,7 @@ if __name__ == "__main__":
 
     except KeyboardInterrupt:
         print("Programme arrêté manuellement.")
+
 
 def exec():
     total_scraped = 1000  # 1000 à recuperer 20 pages * 50 livres
@@ -115,11 +113,12 @@ def exec():
         parse_url = scrap_from_url(get_book_info_from_url(liens))
         scraped_data = scrap_category(liens)
         print('book', "++", parse_url['title'])
+        total_scraped -= scraped_data
 
     else:
         print("scrape de toutes les catégories du site")
-        for liens_book in url_category:
-            liens = (f"{home_url}" + liens_book['url_cat'])
-            parse_url = scrap_from_url(liens)
-            for url_book in liens_book:
-                print('book', url_book)
+    for liens_book in url_category:
+        liens = (f"{home_url}" + liens_book['url_cat'])
+        parse_url = scrap_from_url(liens)
+        for url_book in liens_book:
+            print('book', url_book)

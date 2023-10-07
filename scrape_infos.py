@@ -60,11 +60,13 @@ def pager(url):
 
     if soup.find("ul", attrs="pager"):
         nb_pages = soup.find("ul", attrs="pager").text.strip().split()
+        nb_pages_int = int(nb_pages[3])
         if nb_pages is not None:
-            print(int(nb_pages[3]))
+            return nb_pages_int
 
     else:
-        print("nope")
+        nb_pages_int = 1
+        return nb_pages_int
 
 
 def get_book_info_from_url(liens):
