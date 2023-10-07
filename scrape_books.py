@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from scrape_infos import *
-
+from save_scrape import *
 """
 Ce version béta sert à récupérer :
     - soit toutes les infos concernant un livre,
@@ -48,6 +48,10 @@ def main():
 
         scraped_data = scrap_category(liens)
         parse_url = scrap_from_url(get_book_info_from_url(liens))
+        for url_book in parse_url:
+            print('book', url_book)
+            scraped_data = get_book_info_from_url(url_book)
+            write_to_csv(scraped_data)
 
         # scraped_data = books_url(choix_url, name)
 
@@ -57,17 +61,18 @@ def main():
     else:
         print("scrape de toutes les catégories du site")
         # print("liens des catégories sauf le home : " ,url_category)
-        for url in url_category:
-            liens = (f"{home_url}" + url['url_cat'])
+        for liens_book in url_category:
+            liens = (f"{home_url}" + liens_book['url_cat'])
             # match = re.search(r"\/([^\/]+)_\d+\/", url)
             # name = match.group(1)
-            print(liens, ":")
+            #print(liens, ":")
             parse_url = scrap_from_url(get_book_info_from_url(liens))
             # url_liens = get_all_pages(liens)
-            # for url_book in url_liens:
-            #     print('book', url_book)
-            #     scraped_data = books_url(url_liens, name)
-            #     write_to_csv(scraped_data, name)
+            #recursivite des donnees à recuperer
+            for url_book in liens_book:
+                print('book', url_book)
+                scraped_data = get_book_info_from_url(url_book)
+                write_to_csv(scraped_data, name)
 
             # compteur += 1  # incrémente le compteur
             # total_scraped -= len(url)  # incrémente le total de livres scrapés
