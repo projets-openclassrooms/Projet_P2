@@ -47,8 +47,9 @@ def main():
         print(choix_url['name'], "=" * 2, choisi, " choisi.")
         liens = f"{home_url}{choisi}"
 
+
+        parse_url = scrap_from_url(get_book_info_from_url(liens))
         scraped_data = scrap_category(liens)
-        parse_url = scrap_from_url(get_book_info_from_url(scraped_data))
         #for url_book in parse_url:
         print('book', "++",parse_url['title'])
         #scraped_data = get_book_info_from_url(parse_url['product_page_url'])
@@ -92,3 +93,33 @@ if __name__ == "__main__":
 
     except KeyboardInterrupt:
         print("Programme arrêté manuellement.")
+
+def exec():
+    total_scraped = 1000  # 1000 à recuperer 20 pages * 50 livres
+    compteur = 0  # init compteur
+    print(f"démarrage du scan du site {home_url}")
+    url_category = get_cat_liens(home_url)
+
+    question = input("Voulez-vous tester une catégorie ? O/N ")
+    if str.lower(question) == "o":
+        i = 0
+        for url in url_category:
+            print(i, "+" * 2, url['name'], "=" * 2, url['url_cat'])
+            i += 1
+        choix = input("Merci d'indiquer une catégorie de 0 à 49: ")
+        choix_url = url_category[int(choix)]
+        choisi = choix_url['url_cat']
+        print(choix_url['name'], "=" * 2, choisi, " choisi.")
+        liens = f"{home_url}{choisi}"
+
+        parse_url = scrap_from_url(get_book_info_from_url(liens))
+        scraped_data = scrap_category(liens)
+        print('book', "++", parse_url['title'])
+
+    else:
+        print("scrape de toutes les catégories du site")
+        for liens_book in url_category:
+            liens = (f"{home_url}" + liens_book['url_cat'])
+            parse_url = scrap_from_url(liens)
+            for url_book in liens_book:
+                print('book', url_book)

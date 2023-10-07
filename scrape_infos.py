@@ -1,3 +1,5 @@
+import re
+
 import requests
 import slugify
 from bs4 import BeautifulSoup as bs
@@ -10,7 +12,8 @@ def rating_to_int(rating):
 
 
 def clean_name(name):
-    cleaned_name = slugify(name)
+    re.sub(r'[^\x00-\x7F]','-',name)
+    cleaned_name = slugify(text)
     return cleaned_name
 
 
@@ -64,8 +67,8 @@ def pager(url):
         print("nope")
 
 
-def get_book_info_from_url(link):
-    response = requests.get(link)
+def get_book_info_from_url(liens):
+    response = requests.get(liens)
     parse_url = bs(response.content, features='html.parser')
     return parse_url
 
@@ -76,7 +79,9 @@ def scrap_from_url(parse_url):
     data = []  # init d'une liste d'1 livre
 
     upc = parse_url.select('#product_description ~ table td')[0].text
+    upc = clean_name(upc)
     title = parse_url.h1.text.lower()
+    title = clean_name(title)
     price_incl_tax = parse_url.select('#product_description ~ table td')[2].text
     price_excl_tax = parse_url.select('#product_description ~ table td')[3].text
     stock = parse_url.select('#product_description ~ table td')[5].text.replace('In stock (', '').replace('available)',
