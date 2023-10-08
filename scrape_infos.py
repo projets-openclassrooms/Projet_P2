@@ -75,7 +75,7 @@ def get_book_info_from_url(liens):
     return parse_url
 
 
-def scrap_from_url(parse_url):
+def contenu_livres(parse_url):
     result = []  # init liste de la catégorie
 
     data = []  # init d'une liste d'1 livre
@@ -90,11 +90,20 @@ def scrap_from_url(parse_url):
                                                                                                           '')
     # description remplie d'espace au lieu du vide, nettoyee de ; pour eviter decalage colonne
     description = parse_url.select("p")[3].text
-    description = description.replace(';', ',')
+    if description:
+        description = description.replace(';', ',')
+    else:
+        description = " " # si description vide
+
     category = parse_url.select("a")[3].text
     # review_rating convertie en valeur entiere et non info
     review_rating = parse_url.find_all("p", class_="star-rating")[0].get("class")[1]
-    review_rating = rating_to_int(review_rating)
+    #si review rating vide
+    if review_rating is not None:
+        review_rating = rating_to_int(review_rating)
+    else:
+        review_rating = int(0)
+
     image_url = url + parse_url.find("div", class_="item active").img["src"].replace('../', '')
     # rubriques à recuperer sous forme de dictionnaire pour eviter les doublons plutot que listes
     book_datas = {

@@ -19,6 +19,13 @@ Transform :
 Load:
     save_scrape.py
     write_to_csv(upc)   
+infos connues
+#home_url = books.toscrape.com
+
+infos inconnues
+#url book = home_url + id = write_review 'catalogue/ + a-light-in-the-attic_1000 + /index.html par exemple
+# url image = home_url + img src de div class =" item active"
+#url categorie = home_url + catalogue/category/books + {nom categorie} + page + nbre livres par categorie
 
 """
 home_url = "https://books.toscrape.com/"
@@ -47,7 +54,7 @@ def main():
         liens = f"{home_url}{choisi}"
         #1 choix x livres
 
-        parse_url = scrap_from_url(get_book_info_from_url(liens))
+        parse_url = contenu_livres(get_book_info_from_url(liens))
         scraped_data = scrap_category(liens)
         # for url_book in parse_url:
         print('book', "++", parse_url['title'])
@@ -68,7 +75,7 @@ def main():
             # match = re.search(r"\/([^\/]+)_\d+\/", url)
             # name = match.group(1)
             print(liens, ":")
-            parse_url = scrap_from_url(liens)
+            parse_url = contenu_livres(liens)
             # url_liens = get_all_pages(liens)
             # recursivite des donnees à recuperer
             for url_book in liens_book:
@@ -111,7 +118,7 @@ def exec():
         print(choix_url['name'], "=" * 2, choisi, " choisi.")
         liens = f"{home_url}{choisi}"
 
-        parse_url = scrap_from_url(get_book_info_from_url(liens))
+        parse_url = contenu_livres(get_book_info_from_url(liens))
         scraped_data = scrap_category(liens)
         print('book', "++", parse_url['title'])
         total_scraped -= scraped_data
@@ -120,11 +127,6 @@ def exec():
         print("scrape de toutes les catégories du site")
     for liens_book in url_category:
         liens = (f"{home_url}" + liens_book['url_cat'])
-        parse_url = scrap_from_url(liens)
+        parse_url = contenu_livres(liens)
         for url_book in liens_book:
             print('book', url_book)
-
-#home_url = books.toscrape.com
-#url book = home_url + id = write_revieew 'catalogue/ + a-light-in-the-attic_1000 + /index.html par exemple
-# url image = home_url + img src de div class =" item active"
-#url categorie = home_url + catalogue/category/books + {nom categorie} + page + nbre livres par categorie
