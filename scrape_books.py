@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+import os
+
 from scrape_infos import *
 
 """
@@ -133,39 +135,58 @@ def main():
 if __name__ == "__main__":
     try:
         # dir_clean()  # efface et cree les repertoires de stockage
-        main()
+        #main()
+        pass
 
     except KeyboardInterrupt:
         print("Programme arrêté manuellement.")
 
 
-def exec():
+def execute_prog():
+
+    # ecrit les données dans un fichier csv à partir des données et du nom désiré du fichier
+    current_dir = os.path.dirname(__file__)
+    print(current_dir)
+    #efface dossier depart
+    #def dir_clean()
+
     total_scraped = 1000  # 1000 à recuperer 20 pages * 50 livres
     compteur = 0  # init compteur
     print(f"démarrage du scan du site {home_url}")
+    # recuperer la liste des categories
     url_category = get_cat_liens(home_url)
-
+    # 1 ou toutes les categories?
+    # execute la creation des dossiers et doc csv de stockage
     question = input("Voulez-vous tester une catégorie ? O/N ")
     if str.lower(question) == "o":
+        #numerote categories de 0 à 49
         i = 0
+
         for url in url_category:
             print(i, "+" * 2, url['name'], "=" * 2, url['url_cat'])
             i += 1
         choix = input("Merci d'indiquer une catégorie de 0 à 49: ")
         choix_url = url_category[int(choix)]
         choisi = choix_url['url_cat']
+        #afficher le numero de categorie choisi pour scraper
         print(choix_url['name'], "=" * 2, choisi, " choisi.")
         liens = f"{home_url}{choisi}"
 
+        #scrape la categorie pour en extraire son nombre de livres
         parse_url = contenu_livres(get_book_info_from_url(liens))
-        scraped_data = scrap_category(liens)
+        scraped_data = scrap_category(liens) #??
+        # affiche le titre du livre scrape
         print('book', "++", parse_url['title'])
+        # affiche le nombre restant à scraper
         total_scraped -= scraped_data
+        # ferme le fichier csv
 
     else:
+        # choix scrape toutes categories
         print("scrape de toutes les catégories du site")
-    for liens_book in url_category:
-        liens = (f"{home_url}" + liens_book['url_cat'])
-        parse_url = contenu_livres(liens)
-        for url_book in liens_book:
-            print('book', url_book)
+        for liens_book in url_category:
+            liens = (f"{home_url}" + liens_book['url_cat'])
+            parse_url = contenu_livres(liens)
+            for url_book in liens_book:
+                print('book', url_book)
+execute_prog()

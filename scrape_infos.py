@@ -89,6 +89,10 @@ def contenu_livres(parse_url):
     stock = parse_url.select('#product_description ~ table td')[5].text.replace('In stock (', '').replace('available)',
                                                                                                           '')
     # description remplie d'espace au lieu du vide, nettoyee de ; pour eviter decalage colonne
+#     < div id = "product_description" class ="sub-header" >
+#     < h2 > Product  Description < / h2 >
+#       < / div >
+#       < p > bla bla...
     description = parse_url.select("p")[3].text
     if description:
         description = description.replace(';', ',')
