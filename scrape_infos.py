@@ -80,20 +80,33 @@ def contenu_livres(parse_url):
 
     data = []  # init d'une liste d'1 livre
 
-    upc = parse_url.select('#product_description ~ table td')[0].text
-    upc = clean_name(upc)
+
     title = parse_url.h1.text.lower()
-    title = clean_name(title)
+    #title = clean_name(title)
+
+    #upc = parse_url.select('#product_description ~ table td')[0].text
+    upc = parse_url.select("UPC").text
+    #upc = clean_name(upc)
+    #title = parse_url.h1.text.lower()
+    #title = clean_name(title)
     price_incl_tax = parse_url.select('#product_description ~ table td')[2].text
     price_excl_tax = parse_url.select('#product_description ~ table td')[3].text
-    stock = parse_url.select('#product_description ~ table td')[5].text.replace('In stock (', '').replace('available)',
-                                                                                                          '')
+    #stock = parse_url.select('#product_description ~ table td')[5].text.replace('In stock (', '').replace('available)',
+    #                                                                                                      '')
     # description remplie d'espace au lieu du vide, nettoyee de ; pour eviter decalage colonne
 #     < div id = "product_description" class ="sub-header" >
 #     < h2 > Product  Description < / h2 >
 #       < / div >
 #       < p > bla bla...
-    description = parse_url.select("p")[3].text
+    #description = parse_url.select("p")[3].text
+    stock = soup.find(
+        class_="instock availability"
+    ).text.strip()
+    stock = "".join(i for i in number_available if i.isdigit())
+    description = soup.head.find(
+        "meta", attrs={"name": "description"}
+    )
+    product_description = description.attrs["content"].strip()
     if description:
         description = description.replace(';', ',')
     else:
