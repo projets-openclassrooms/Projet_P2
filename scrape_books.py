@@ -30,7 +30,46 @@ infos inconnues
 """
 home_url = "https://books.toscrape.com/"
 
+"""
+recherche categories 
+with csvfile:
+    question 
+        categorie
+            lister categories
+             afficher liste categories
+                a = stocker liste categories
+                question choix categorie
+                    categorie choisie
+                    remplacer lien index.html par page-1.html
+                    chercher form horizontal nombres livres
+                    compter nbpages = ceil(n/20)
+                    for i in nbpages:
+                        creer lien page-i.html
+                        scrape page _i.html
+                        def lien_livre = chercher href lien livres => stocker_livres
+                        remplacer caracteres ../ par home_url+ lien
+                        ajout dans csvfile
+                        close csvfile
+        toutes categories
+            with liste categories
+                remplacer lien index.html par page-1.html
+                chercher form horizontal nombres livres
+                compter nbpages = ceil(n/20)
+                for i in nbpages:
+                    creer lien page-i.html
+                    scrape page _i.html
+                    def lien_livre = chercher href lien livres => stocker_livres
+                    remplacer caracteres ../ par home_url+ lien
+                    ajout dans csvfile
+                    close csvfile
+                        
+                                        compter 
+        toutes categories    
 
+
+
+
+"""
 def main():
     total_scraped = 1000  # 1000 à recuperer 20 pages * 50 livres
     compteur = 0  # init compteur
