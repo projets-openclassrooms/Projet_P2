@@ -218,8 +218,12 @@ def get_cat_liens(url):
 
 
 def scrap_category(choix):
-    print(choix)
-    get_all_pages(choix)
+    #print(choix)
+    req = requests.get(choix)
+    soup = bs(req.content, 'lxml')
+    books_tag = soup.find_all('article', class_ = 'product_pod')
+    print (len(books_tag))
+    # get_all_pages(choix)
     print()
 
 # parse_url=get_book_info_from_url(liens)

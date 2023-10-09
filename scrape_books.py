@@ -173,16 +173,17 @@ def execute_prog():
         print(choix_url['name'], "=" * 2, choisi, " choisi.")
         liens = f"{home_url}{choisi}"
 
+
         #scrape la categorie pour en extraire son nombre de livres
         #parse_url = contenu_livres(get_book_info_from_url(liens))
 
         scraped_data = scrap_category(liens) #??
-        parse_url = contenu_livres(get_book_info_from_url(liens))
+        #parse_url = contenu_livres(get_book_info_from_url(liens))
 
         # affiche le titre du livre scrape
-        print('book', "++", parse_url['title'])
+        #print('book', "++", parse_url['title'])
         # affiche le nombre restant à scraper
-        total_scraped -= scraped_data
+        #total_scraped -= scraped_data
         # ferme le fichier csv
 
     else:
