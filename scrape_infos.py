@@ -218,16 +218,23 @@ def get_cat_liens(url):
 
 
 def scrap_category(choix):
-    #print(choix)
+    print(choix)
+    category = choix.replace("/index.html","").replace("https://books.toscrape.com/catalogue/category/books/","")
     req = requests.get(choix)
     soup = bs(req.content, 'lxml')
     books_tag = soup.find_all('div', class_ = 'image_container')
+    print(books_tag)
+    choix = choix.replace(f"category/books/{category}/index.html","")
+    print(choix)
+    liste = []
     print (len(books_tag))
     # get_all_pages(choix)
-    for i in range(len(books_tag)):
-        #books_link = soup.find.a['href']
-        book_img = soup.find_all('a>href', class_ = 'thumbnail')
-        print(book_img)
+    for div in books_tag:
+        books_link = div.find('a')
+        liste.append(choix+books_link['href'].replace("../",""))
+        book_img = soup.find_all('a href', class_ = 'thumbnail')
+
+        print(liste,len(liste))
 
 # parse_url=get_book_info_from_url(liens)
 
