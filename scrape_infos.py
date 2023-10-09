@@ -80,6 +80,7 @@ def contenu_livres(parse_url):
     result = []  # init liste de la catégorie
 
     data = []  # init d'une liste d'1 livre
+    print(parse_url)
 
 
     title = parse_url.h1.text.lower()
@@ -139,49 +140,49 @@ def contenu_livres(parse_url):
     return book_datas
 
 
-# def get_all_pages(liens):
-#     url_liens = liens
-#     urls = []
-#     categories = []
-#     url_liens_temp = url_liens
-#     print(url_liens_temp, url_liens)
-#     while True:
-#         reponse = requests.get(url_liens)
-#         page = reponse.content
-#         soup = bs(page, "html.parser")
-#         urls.append(url_liens)
-#         li_nexts = soup.find_all("li", class_="next")
-#         if li_nexts is not None:
-#             next_page = li_nexts.find("a")
-#             # print(li_nexts)
-#
-#             if next_page is not None:
-#                 url_liens = next_page["href"]
-#
-#                 url_liens = url_liens_temp + url_liens
-#                 # print(url_liens)
-#             else:
-#                 break
-#         else:
-#             break
-#
-#         for url in urls:
-#             reponse = requests.get(url)
-#
-#             page = reponse.content
-#             soup = bs(page, "html.parser")
-#
-#             h3_tags = soup.find_all("h3")
-#             # récupère les balises h3 contenant les urls des livres
-#             # retire les ../../ en début d'url
-#             # retourne une liste complete d'url
-#             for h3_tag in h3_tags:
-#                 link_tag = h3_tag.a
-#                 href_value = link_tag["href"].replace("../", "")
-#                 href_value = f"{home_url}catalogue/{href_value}"
-#                 categories.append(href_value)
-#
-#     return categories
+def get_all_pages(liens):
+    url_liens = liens
+    urls = []
+    categories = []
+    url_liens_temp = url_liens
+    print(url_liens_temp, url_liens)
+    while True:
+        reponse = requests.get(url_liens)
+        page = reponse.content
+        soup = bs(page, "html.parser")
+        urls.append(url_liens)
+        li_nexts = soup.find_all("li", class_="next")
+        if li_nexts is not None:
+            next_page = li_nexts.find("a")
+            # print(li_nexts)
+
+            if next_page is not None:
+                url_liens = next_page["href"]
+
+                url_liens = url_liens_temp + url_liens
+                # print(url_liens)
+            else:
+                break
+        else:
+            break
+
+        for url in urls:
+            reponse = requests.get(url)
+
+            page = reponse.content
+            soup = bs(page, "html.parser")
+
+            h3_tags = soup.find_all("h3")
+            # récupère les balises h3 contenant les urls des livres
+            # retire les ../../ en début d'url
+            # retourne une liste complete d'url
+            for h3_tag in h3_tags:
+                link_tag = h3_tag.a
+                href_value = link_tag["href"].replace("../", "")
+                href_value = f"{home_url}catalogue/{href_value}"
+                categories.append(href_value)
+
+    return categories
 
 
 def get_cat_liens(url):
@@ -218,7 +219,7 @@ def get_cat_liens(url):
 
 def scrap_category(choix):
     print(choix)
-    pager(choix)
+    get_all_pages(choix)
     print()
 
 # parse_url=get_book_info_from_url(liens)
