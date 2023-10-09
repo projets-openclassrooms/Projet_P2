@@ -178,7 +178,7 @@ def execute_prog():
         #parse_url = contenu_livres(get_book_info_from_url(liens))
 
         scraped_data = scrap_category(liens) #??
-        #parse_url = contenu_livres(get_book_info_from_url(liens))
+        parse_url = contenu_livres(get_book_info_from_url(liens))
 
         # affiche le titre du livre scrape
         #print('book', "++", parse_url['title'])
