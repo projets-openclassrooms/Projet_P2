@@ -94,9 +94,10 @@ def main():
         print(choix_url['name'], "=" * 2, choisi, " choisi.")
         liens = f"{home_url}{choisi}"
         #1 choix x livres
-
-        parse_url = contenu_livres(get_book_info_from_url(liens))
         scraped_data = scrap_category(liens)
+
+        parse_url = contenu_livres(get_book_info_from_url(scraped_data))
+        #scraped_data = scrap_category(liens)
         # for url_book in parse_url:
         print('book', "++", parse_url['title'])
         # scraped_data = get_book_info_from_url(parse_url['product_page_url'])
@@ -173,8 +174,11 @@ def execute_prog():
         liens = f"{home_url}{choisi}"
 
         #scrape la categorie pour en extraire son nombre de livres
-        parse_url = contenu_livres(get_book_info_from_url(liens))
+        #parse_url = contenu_livres(get_book_info_from_url(liens))
+
         scraped_data = scrap_category(liens) #??
+        parse_url = contenu_livres(get_book_info_from_url(liens))
+
         # affiche le titre du livre scrape
         print('book', "++", parse_url['title'])
         # affiche le nombre restant à scraper
