@@ -72,7 +72,7 @@ def pager(url):
 def get_book_info_from_url(liens):
     response = requests.get(liens)
     parse_url = bs(response.content, features='html.parser')
-    print(parse_url.prettify())
+    #print(parse_url.prettify())
     return parse_url
 
 
@@ -80,13 +80,15 @@ def contenu_livres(parse_url):
     result = []  # init liste de la catégorie
 
     data = []  # init d'une liste d'1 livre
-    print(parse_url)
+    #print(parse_url)
 
 
     title = parse_url.h1.text.lower()
     #title = clean_name(title)
+    tds = parse_url.find_all('td')
+    upc = tds[0].text
 
-    upc = parse_url.select('#product_description ~ table td')[0].text
+    #upc = parse_url.select('#product_description ~ table td')[0].text
     #upc = parse_url.h2.find("th","UPC").find_next_siblings().text
     #upc = clean_name(upc)
     #title = parse_url.h1.text.lower()
@@ -234,7 +236,7 @@ def scrap_category(choix):
         liste.append(choix+books_link['href'].replace("../",""))
         book_img = soup.find_all('a href', class_ = 'thumbnail')
 
-        print(liste,len(liste))
+    print(liste,len(liste))
 
 # parse_url=get_book_info_from_url(liens)
 
