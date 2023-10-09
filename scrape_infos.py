@@ -221,10 +221,13 @@ def scrap_category(choix):
     #print(choix)
     req = requests.get(choix)
     soup = bs(req.content, 'lxml')
-    books_tag = soup.find_all('article', class_ = 'product_pod')
+    books_tag = soup.find_all('div', class_ = 'image_container')
     print (len(books_tag))
     # get_all_pages(choix)
-    print()
+    for i in range(len(books_tag)):
+        #books_link = soup.find.a['href']
+        book_img = soup.find_all('a>href', class_ = 'thumbnail')
+        print(book_img)
 
 # parse_url=get_book_info_from_url(liens)
 
