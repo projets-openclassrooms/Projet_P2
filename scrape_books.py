@@ -11,11 +11,12 @@ selon la méthode Extract Transform Load
 Extract :
     scrape_books.py
     home_url = "https://books.toscrape.com/"
-    url_category = get_cat_liens(home_url)
+    url_category = get_cat_liens(home_url) pour lister les categories
  
 Transform :
     scrape_infos.py
-    scrap_category(liens)
+    scrap_category(liens) pour recuperer les livres par categorie
+    
     :return noms, liens, UPC, noms des images, catégories, etc...
 
 Load:
@@ -25,7 +26,7 @@ infos connues
 #home_url = books.toscrape.com
 
 infos inconnues
-#url book = home_url + id = write_review 'catalogue/ + a-light-in-the-attic_1000 + /index.html par exemple
+#url book = home_url + id = write_review ('catalogue/ + a-light-in-the-attic_1000 + /index.html par exemple)
 # url image = home_url + img src de div class =" item active"
 #url categorie = home_url + catalogue/category/books + {nom categorie} + page + nbre livres par categorie
 
