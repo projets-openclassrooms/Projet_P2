@@ -7,6 +7,7 @@ current_dir = os.path.dirname(__file__)
 folder = os.path.join(current_dir, "/", "site_scraped")
 
 
+
 def dir_clean():
     if Path(os.path.exists(folder)):
         Path(folder).parent.rmdir()
