@@ -80,12 +80,14 @@ def contenu_livres(parse_url):
     result = []  # init liste de la catégorie
 
     data = []  # init d'une liste d'1 livre
-    #print(parse_url)
+    print(parse_url)
 
 
     title = parse_url.h1.text.lower()
+    print(title)
     #title = clean_name(title)
-    tds = parse_url.find_all('td')
+    tds = parse_url.find_all('th')
+    print(tds)
     upc = tds[0].text
 
     #upc = parse_url.select('#product_description ~ table td')[0].text
