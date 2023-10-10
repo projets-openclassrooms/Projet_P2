@@ -27,12 +27,13 @@ def nb_of_pages(link):
     soup = bs(page.text, "html.parser")
     nb_links = int(soup.find_all("strong")[1].text)
     nb_pages = ceil(nb_links/20)
-    print(type(nb_pages))
     if int(nb_pages) ==0:
         nb_pages += 1
     else:
         nb_pages
-    return nb_pages
+    return nb_pages, " pages à récupérer - ",nb_links," livres."
+
+
 # extrait les informations de livres d'une catégorie depuis liens urls :
 # - product_page_url
 # - universal_ product_code (upc)
@@ -236,100 +237,13 @@ def get_cat_liens(url):
 def scrap_category(choix):
     #print(choix)
 
-    req = requests.get(choix)
-    soup = bs(req.content, 'lxml')
-    books_tag = soup.find_all('div', class_ = 'image_container')
-    print (len(books_tag))
-    prod = soup.find_all(class_="product_pod")[0].find("a").attrs["href"]
-    # get_all_pages(choix)
-    for x in href_category[1:]:
+    while True:
 
-        Category = x.string
-        Category = Category.replace("\n", "").strip()
-        href = x["href"]
-        hreflink = 'http://books.toscrape.com/' + href
-        print(hreflink)
-        for j in range(1, 9):
-            if j == 1:
-                pass
-            if j == 2:
-                page_number = f"page-{j}.html"
-                hreflink = hreflink.replace("index.html", page_number)
-            if j > 2:
-                page_number = f"page-{j}.html"
-                hreflink = hreflink.replace(f"page-{j - 1}.html", page_number)
+        req = requests.get(choix)
+        soup = bs(req.content, 'lxml')
+        books_tag = soup.find_all('div', class_ = 'image_container')
+        print (len(books_tag))
+        prods = soup.find_all(class_="product_pod")[0].find("a").attrs["href"]
+        print(prods)
+        break
 
-            response = requests.get(hreflink)
-            if response.status_code == 200:
-                print(f">scrape link : {hreflink}")
-
-                soup = bs(response.text, "html.parser")
-                section = soup.find('section')
-                list_ordonnee = section.find('ol')
-                article = list_ordonnee.find_all('article', attrs={"class": 'product_pod'})
-
-                for i in article:
-                    Data = {}
-                    h3 = i.find('h3')
-                    a = h3.find('a')
-                    href = a.attrs['href']
-                    href = "http://books.toscrape.com/catalogue" + href[8:]
-                    response = requests.get(href)
-                    print(f">>scrape book : {href}")
-                    soupart = bs(response.text, "html.parser")
-                    title = soupart.find('h1')
-
-                    Data["Genre"] = Category
-                    Data["Title"] = title.string
-                    price = soupart.find('p', attrs={'class': 'price_color'})
-                    price = price.text
-                    Data["price"] = price[2:]
-                    instock = soupart.find("p", class_="instock availability")
-                    instock = instock.text.strip()
-                    Data["Stock"] = instock[10:12]
-                    stars = soupart.find("p", class_="star-rating")
-                    stars = stars['class']
-                    stars = stars[1]
-                    Data["Star"] = stars_rate[stars]
-
-                    Table = soupart.find("table")
-                    UPC = Table.find_all('td')[0]
-                    UPC = UPC.string
-                    Data["UPC"] = UPC
-                    Type = Table.find_all('td')[1]
-                    Data["Type"] = Type.text
-                    Tax = Table.find_all('td')[4]
-                    Tax = Tax.text
-                    Data["Tax"] = Tax[2:]
-                    Number_of_reviews = Table.find_all('td')[-1]
-                    Data["Number of reviews"] = Number_of_reviews.text
-                    des = soupart.find_all('p')
-                    des = des[3]
-                    des = des.text
-                    des = " ".join(des.split(",")[:3]) + "||Fore More You should read this books. Thanks"
-                    Data["desc"] = des
-                    l.append(Data)
-            else:
-                print(f"not found : ?? page number{j}")
-
-    # for pro in prod:
-    #     #print(prod)
-    # books = []
-    # for i in range(len(prod)):
-    #     #books_link = soup.find.a['href']
-    #     ol = soup.find('ol')
-    #     articles = ol.find_all('article', class_='product_pod')
-    #     #print(articles)
-    #     for article in articles:
-    #         image = article.find('img')
-    #         title = image.attrs['alt']
-    #         starTag = article.find('p')
-    #         star = starTag['class'][1]
-    #         price = article.find('p', class_='price_color').text
-    #         price = float(price[1:])
-    #         # apppending the above items into books Array
-    #         books.append([title, star, price])
-
-# parse_url=get_book_info_from_url(liens)
-
-# print(scrap_from_url(parse_url))

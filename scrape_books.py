@@ -172,13 +172,15 @@ def execute_prog():
         #afficher le numero de categorie choisi pour scraper
         print(choix_url['name'], "=" * 2, choisi, " choisi.")
         liens = f"{home_url}{choisi}"
-        print(nb_of_pages(liens), " pages à récupérer")
+        #print(pager(liens))
+        print(nb_of_pages(liens))
+
 
 
         #scrape la categorie pour en extraire son nombre de livres
         #parse_url = contenu_livres(get_book_info_from_url(liens))
 
-        scraped_data = scrap_category(liens) #??
+        #scraped_data = scrap_category(liens) #??
         #parse_url = contenu_livres(get_book_info_from_url(liens))
 
         # affiche le titre du livre scrape
