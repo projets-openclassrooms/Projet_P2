@@ -78,6 +78,7 @@ def get_book_info_from_url(liens):
 
 def contenu_livres(parse_url):
     result = []  # init liste de la catégorie
+    #lien livre non recupere
 
     data = []  # init d'une liste d'1 livre
     print(parse_url)
