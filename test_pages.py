@@ -7,7 +7,7 @@ from bs4 import BeautifulSoup as bts
 
 home_url = "https://books.toscrape.com/"
 page = "https://books.toscrape.com/catalogue/page"
-
-catalogue = f"{page}{}html"
+i= 1
+catalogue = page + "{}_html".format(i)
 
 print(catalogue.format(2))
