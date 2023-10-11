@@ -3,3 +3,17 @@ Lib/
 *.idea
 .env/
 *.cfg
+datas/
+img/*
+site_scrapped/
+*.o
+*.pyc
+*.class
+*.tmp
+*.log
+*.lock
+.idea/
+**/logs
+*.jpg
+*.csv
+/couvertures/
