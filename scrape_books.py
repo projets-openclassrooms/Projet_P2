@@ -174,6 +174,7 @@ def execute_prog():
         liens = f"{home_url}{choisi}"
         #print(pager(liens))
         print(nb_of_pages(liens))
+        scrap_category(choix)
 
 
 

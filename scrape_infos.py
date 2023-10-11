@@ -236,14 +236,25 @@ def get_cat_liens(url):
 
 def scrap_category(choix):
     #print(choix)
+    books_url = []
 
     while True:
 
-        req = requests.get(choix)
-        soup = bs(req.content, 'lxml')
-        books_tag = soup.find_all('div', class_ = 'image_container')
-        print (len(books_tag))
-        prods = soup.find_all(class_="product_pod")[0].find("a").attrs["href"]
-        print(prods)
-        break
+        soup = get_book_info_from_url(choix)
 
+        # Boucle For pour extraire tous les liens des livres
+        h3s = soup.find_all("h3")
+        for h3 in h3s:
+            a = h3.find("a")
+            link = a["href"]
+            books_url.append(category_url.replace("/category/books", "") + link)
+
+        # Pagination si existante.
+        next_page_element = soup.select_one("li.next > a")
+        if next_page_element:
+            next_page_url = next_page_element.get("href")
+            url_category = category_url.replace("index.html", next_page_url)
+            print(f"processing {next_page_url.replace('.html', '')}")
+        else:
+            break
+    return books_url
