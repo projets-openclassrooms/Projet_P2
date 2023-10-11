@@ -56,7 +56,7 @@ def delete_folder():
         pass
 
 
-# Traitement de la pagination
+# Traitement de la page
 
 
 def pagecat(linkCat, cat):
@@ -65,9 +65,11 @@ def pagecat(linkCat, cat):
     if responseCatPage.ok:
         i = 1
         while responseCatPage.ok:
+            #
             onepage(linkCat, cat)
             i = i + 1
             linkCat = linkCat.replace('page-' + str(i - 1) + '.html', 'page-' + str(i) + '.html')
+            #print(linkCat)
             responseCatPage = requests.get(linkCat)
     else:
         linkCat = linkCat.replace('page-1.html', 'index.html')
@@ -81,6 +83,7 @@ def onepage(link, cat):
     responsePage = requests.get(link)
     booksLinks = bts(responsePage.text, features="html.parser")
     liens_livres = booksLinks.findAll('div', {'class': 'image_container'})
+    #print(liens_livres)
     for i in range(len(liens_livres)):
         savebooks(liens_livres[i].find('a').attrs['href'].replace('../../..', cat_url), cat)
     #print(liens_livres)
@@ -100,6 +103,7 @@ def savebooks(link, cat):
             p_e_t = tds[2].text.replace(',', '').replace(';', '').replace('£', "").replace('Â',"")
             num_avble = tds[5].text.replace('In stock (','').replace(' available)',"")
             reviewRating = tds[6].text.replace(',', '').replace(';', '')
+
             title = soup.find('div', {'class': 'col-sm-6 product_main'}).find('h1').text.replace(',', '').replace(';',
                                                                                                                   '')
             prod_desc = soup.find('article', {'class': 'product_page'}).findAll('p')[3].text.replace(',',
@@ -139,6 +143,7 @@ def main():
             print('Catégorie : ' + cat_Link[i].text.replace('\n', '').replace(' ',
                                                                               '') + ' ' + str(
                 i + 1) + '/' + str(len(cat_Link)))
+            # fonction pour rechercher les liens des categories
             pagecat(home_url + cat_Link[i].attrs['href'], cat_Link[i].text.replace('\n', '').replace(' ', ''))
 
 
