@@ -16,3 +16,4 @@ site_scrapped/
 **/logs
 *.jpg
 *.csv
+/couvertures/
