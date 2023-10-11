@@ -1,33 +1,12 @@
 import os
 import shutil
-
+import re
 import requests
 from bs4 import BeautifulSoup as bts
 
 home_url = "https://books.toscrape.com/"
 index_url = f"{home_url}index.html"
 cat_url = f"{home_url}catalogue"
-
-
-def main():
-    delete_folder()
-    creation_folder()
-    response = requests.get(index_url)
-    headers = 'product_page_url;universal_product_code;title;price_including_tax;price_excluding_tax;number_available;product_description;category;review_rating;image_url\n'
-    if response.ok:
-        cat_Links = bts(response.text, features="html.parser")
-        cat_Link = cat_Links.find('ul', {'class': 'nav nav-list'}).find('ul').findAll('a')
-        # print(cat_Link)
-        for i in range(len(cat_Link)):
-            # print(cat_Link[i])
-            with open('livres/' + cat_Link[i].text.replace('\n', '').replace(' ', '') + '.csv', 'w',
-                      encoding='utf-8-sig') as file:
-                file.write(headers)
-            print('Catégorie en cours de téléchargement : ' + cat_Link[i].text.replace('\n', '').replace(' ',
-                                                                                                         '') + ' ' + str(
-                i + 1) + '/' + str(len(cat_Link)))
-            pagecat(home_url + cat_Link[i].attrs['href'], cat_Link[i].text.replace('\n', '').replace(' ', ''))
-
 
 
 # Création des répertoires
@@ -39,9 +18,18 @@ def creation_folder():
         os.mkdir('couvertures/')
     except OSError:
         pass
-    else:
-        pass
 
+def remove_bad_char(test_string):
+    # initializing bad_chars_list
+    #bad_chars = [';', ':', '!', "*", " ", "#", "â", '.', '/', '~','&','\',','{',"}"]
+
+    new_string = re.sub(r'[<>;.:,"/\|?*&€%£$()~#{}=+°-]',"_",test_string)
+    new_string = re.sub(r'[@â]',"a",new_string)
+    new_string = re.sub(r'[&]', "et", new_string)
+    new_string = re.sub(r'[ù]', "u", new_string)
+
+
+    return new_string
 
 def delete_folder():
     repertoire_de_travail = str(os.path.dirname(os.path.realpath(__file__)))
@@ -52,76 +40,77 @@ def delete_folder():
     if os.path.exists(dossier_livres):
         shutil.rmtree(dossier_livres, ignore_errors=False, onerror=None)
         shutil.rmtree(dossier_couvertures, ignore_errors=False, onerror=None)
-    else:
-        pass
 
 
-# Traitement de la page
+
+# Traitement de la page pour chercher nombre pages des categories
 
 
-def pagecat(linkCat, cat):
-    linkCat = linkCat.replace('index.html', 'page-1.html')
-    responseCatPage = requests.get(linkCat)
-    if responseCatPage.ok:
+def get_page_categorie(link_cat, cat):
+    link_cat = link_cat.replace('index.html', 'page-1.html')
+    response_cat_page = requests.get(link_cat)
+    if response_cat_page.ok:
         i = 1
-        while responseCatPage.ok:
+        while response_cat_page.ok:
             #
-            onepage(linkCat, cat)
+            get_books_on_page(link_cat, cat)
             i = i + 1
-            linkCat = linkCat.replace('page-' + str(i - 1) + '.html', 'page-' + str(i) + '.html')
-            #print(linkCat)
-            responseCatPage = requests.get(linkCat)
+            link_cat = link_cat.replace('page-' + str(i - 1) + '.html', 'page-' + str(i) + '.html')
+            #print(link_cat)
+            response_cat_page = requests.get(link_cat)
     else:
-        linkCat = linkCat.replace('page-1.html', 'index.html')
-        onepage(linkCat, cat)
+        link_cat = link_cat.replace('page-1.html', 'index.html')
+        get_books_on_page(link_cat, cat)
 
 
 # Récupération des livres d'une catégorie
 
 
-def onepage(link, cat):
-    responsePage = requests.get(link)
-    booksLinks = bts(responsePage.text, features="html.parser")
-    liens_livres = booksLinks.findAll('div', {'class': 'image_container'})
+def get_books_on_page(link, cat):
+    response_page = requests.get(link)
+    books_links = bts(response_page.text, features="html.parser")
+    liens_livres = books_links.findAll('div', {'class': 'image_container'})
     #print(liens_livres)
     for i in range(len(liens_livres)):
-        savebooks(liens_livres[i].find('a').attrs['href'].replace('../../..', cat_url), cat)
+        save_books(liens_livres[i].find('a').attrs['href'].replace('../../..', cat_url), cat)
     #print(liens_livres)
 
 
 # Récupération des infos d'un livre
 
 
-def savebooks(link, cat):
-    responseBookPage = requests.get(link)
-    if responseBookPage.ok:
+def save_books(link, cat):
+    response_book_page = requests.get(link)
+    if response_book_page.ok:
         with open('livres/' + cat + '.csv', 'a', encoding='utf-8-sig') as file:
-            soup = bts(responseBookPage.text, features="html.parser")
+            soup = bts(response_book_page.text, features="html.parser")
             tds = soup.findAll('td')
             u_p_c = tds[0].text.replace(',', '').replace(';', '')
             p_i_t = tds[3].text.replace(',', '').replace(';', '').replace('£', "").replace('Â',"")
             p_e_t = tds[2].text.replace(',', '').replace(';', '').replace('£', "").replace('Â',"")
             num_avble = tds[5].text.replace('In stock (','').replace(' available)',"")
-            reviewRating = tds[6].text.replace(',', '').replace(';', '')
+            review_rating = tds[6].text.replace(',', '').replace(';', '')
 
             title = soup.find('div', {'class': 'col-sm-6 product_main'}).find('h1').text.replace(',', '').replace(';',
                                                                                                                   '')
+
             prod_desc = soup.find('article', {'class': 'product_page'}).findAll('p')[3].text.replace(',',
                                                                                                      '').replace(
                 ';', '')
+
             category = soup.find('ul', {'class': 'breadcrumb'}).findAll('a')[2].text.replace(',', '').replace(';', '')
-            imageUrl = soup.find('div', {'class': 'item active'}).find('img').attrs['src'].replace('../..', home_url)
-            dwld_imgs(imageUrl, u_p_c)
-            resultat = link + ';' + u_p_c + ';' + title + ';' + p_i_t + ';' + p_e_t + ';' + num_avble + ';' + prod_desc + ';' + category + ';' + reviewRating + ';' + imageUrl + '\n'
+            image_url = soup.find('div', {'class': 'item active'}).find('img').attrs['src'].replace('../..', home_url)
+            dwld_imgs(image_url, title, u_p_c)
+            resultat = link + ';' + u_p_c + ';' + title + ';' + p_i_t + ';' + p_e_t + ';' + num_avble + ';' + prod_desc + ';' + category + ';' + review_rating + ';' + image_url + '\n'
             file.write(resultat)
 
 
 # Téléchargement des couvertures
 
 
-def dwld_imgs(imageUrl, productCode):
-    response = requests.get(imageUrl)
-    file = open('couvertures/' + productCode + '.jpg', "wb")
+def dwld_imgs(image_url, title, product_code):
+    response = requests.get(image_url)
+    file = open('couvertures/' + remove_bad_char(title) + product_code + '.jpg', "wb")
     file.write(response.content)
     file.close()
 
@@ -132,19 +121,20 @@ def main():
     response = requests.get(index_url)
     headers = 'product_page_url;universal_product_code;title;price_including_tax;price_excluding_tax;number_available;product_description;category;review_rating;image_url\n'
     if response.ok:
-        cat_Links = bts(response.text, features="html.parser")
-        cat_Link = cat_Links.find('ul', {'class': 'nav nav-list'}).find('ul').findAll('a')
+        cat_links = bts(response.text, features="html.parser")
+        cat_link = cat_links.find('ul', {'class': 'nav nav-list'}).find('ul').findAll('a')
         # print(cat_Link)
-        for i in range(len(cat_Link)):
+        for i in range(len(cat_link)):
             # print(cat_Link[i])
-            with open('livres/' + cat_Link[i].text.replace('\n', '').replace(' ', '') + '.csv', 'w',
+            with open('livres/' + cat_link[i].text.replace('\n', '').replace(' ', '') + '.csv', 'w',
                       encoding='utf-8-sig') as file:
                 file.write(headers)
-            print('Catégorie : ' + cat_Link[i].text.replace('\n', '').replace(' ',
+            print('Catégorie : ' + cat_link[i].text.replace('\n', '').replace(' ',
                                                                               '') + ' ' + str(
-                i + 1) + '/' + str(len(cat_Link)))
+                i + 1) + '/' + str(len(cat_link)))
             # fonction pour rechercher les liens des categories
-            pagecat(home_url + cat_Link[i].attrs['href'], cat_Link[i].text.replace('\n', '').replace(' ', ''))
+            get_page_categorie(home_url + cat_link[i].attrs['href'], cat_link[i].text.replace('\n', '').replace(' ', ''))
+            print("téléchargement terminé")
 
 
 if __name__ == "__main__":
