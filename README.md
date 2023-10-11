@@ -18,17 +18,14 @@ Ces informations sont les suivantes:
 	URL de l'image
 
 
-Elles sont classées par catégories dans un fichier CSV correspondant à la catégorie récupérée.
+Elles sont classées par dossiers (livres et couvertures)
+Un fichier CSV est créé pour la catégorie récupérée, séparé par ';'.
+La couverture est téléchargée dans le dossier couvertures localement.
 
-L'image du livre est aussi récupérée et stockée localement dans un répertoire de couvertures.
 
-
-## Installations des requis sous windows
+## Installations des prérequis sous windows
 Dernière version de Python https://www.python.org/download/
-Choisissez la manière la plus appropriée d'exécuter vos scripts Python
- cmd windows, 
- script bash
- un IDE tel que Pycharm ou VS Code.
+Pour les tests , utilisation de l'IDE Pycharm.
 
 Placez vous dans le dossier de votre choix.
 git clone https://github.com/bk7191/OpenclassroomsProject-P2.git
