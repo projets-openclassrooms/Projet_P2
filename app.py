@@ -36,7 +36,7 @@ def remove_bad_char(test_string):
     # bad_chars = [';', ':', '!', "*", " ", "#", "â", '.', '/', '~','&','\',','{',"}"]
 
     new_string = re.sub(r'[<>;.:,"/\|?*&€%£$()~#{}=+°-]', "_", test_string)
-    new_string = re.sub(r'[@â]', "a", new_string)
+    new_string = re.sub(r'[@âÂ]', "a", new_string)
     new_string = re.sub(r'&', "et", new_string)
     new_string = re.sub(r'ù', "u", new_string)
 
@@ -110,7 +110,7 @@ def save_books(link, cat):
             title = sans_ponctuation(title)
 
             prod_desc = soup.find('article', {'class': 'product_page'}).findAll('p')[3].text
-            prod_desc = sans_ponctuation(prod_desc)
+            prod_desc = remove_bad_char(prod_desc)
 
             category = soup.find('ul', {'class': 'breadcrumb'}).findAll('a')[2].text
             category = sans_ponctuation(category)
