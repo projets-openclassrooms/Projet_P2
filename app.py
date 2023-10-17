@@ -1,6 +1,8 @@
+import codecs
 import os
-import shutil
 import re
+import shutil
+
 import requests
 from bs4 import BeautifulSoup as bts
 
@@ -20,29 +22,6 @@ def creation_folder():
         pass
 
 
-def sans_ponctuation(ponctuation):
-    # .replace(',', '').replace(';', '')
-    sans = re.sub(r'[,;.]', "", ponctuation)
-    return sans
-
-
-def sans_monnaie(monnaie):
-    rien = re.sub(r'[ Â£]', "", monnaie)
-    return rien
-
-
-def remove_bad_char(test_string):
-    # initializing bad_chars_list
-    # bad_chars = [';', ':', '!', "*", " ", "#", "â", '.', '/', '~','&','\',','{',"}"]
-
-    new_string = re.sub(r'[<>;.:,"/\|?*&€%£$()~#{}=+°-]', "_", test_string)
-    new_string = re.sub(r'[@âÂ]', "a", new_string)
-    new_string = re.sub(r'&', "et", new_string)
-    new_string = re.sub(r'ù', "u", new_string)
-
-    return new_string
-
-
 def delete_folder():
     repertoire_de_travail = str(os.path.dirname(os.path.realpath(__file__)))
     # print (repertoire_de_travail)
@@ -52,6 +31,30 @@ def delete_folder():
     if os.path.exists(dossier_livres):
         shutil.rmtree(dossier_livres, ignore_errors=False, onerror=None)
         shutil.rmtree(dossier_couvertures, ignore_errors=False, onerror=None)
+
+
+def sans_ponctuation(ponctuation):
+    # .replace(',', '').replace(';', '')
+    sans = re.sub(r'[,;.]', " ", ponctuation)
+    return sans
+
+def decodeur(string):
+    encoded_string = codecs.encode(string,"ISO-8859-1")
+    decoded_string = codecs.decode(encoded_string,"UTF-8")
+    return decoded_string
+def remove_bad_char(test_string):
+    # initializing bad_chars_list
+    # bad_chars = [';', ':', '!', "*", " ", "#", "â", '.', '/', '~','&','\',','{',"}"]
+
+
+    new_string = re.sub(r'[<>;.:,"/\|?*€%£$()~#{}=+°-]', "_", test_string)
+    new_string = re.sub(r"'", " ", new_string)
+    new_string = re.sub(r'[@âÂ]', "a", new_string)
+    new_string = re.sub(r'&', "et", new_string)
+    new_string = re.sub(r'ù', "u", new_string)
+    new_string = re.sub(r'Ã©', 'é', new_string)
+
+    return new_string
 
 
 # Traitement de la page pour chercher nombre pages des categories
@@ -69,6 +72,7 @@ def get_page_categorie(link_cat, cat):
             link_cat = link_cat.replace('page-' + str(i - 1) + '.html', 'page-' + str(i) + '.html')
             # print(link_cat)
             response_cat_page = requests.get(link_cat)
+
     else:
         link_cat = link_cat.replace('page-1.html', 'index.html')
         get_books_on_page(link_cat, cat)
@@ -99,18 +103,24 @@ def save_books(link, cat):
             u_p_c = tds[0].text
             u_p_c = sans_ponctuation(u_p_c)
             p_i_t = tds[3].text.replace('£', "").replace('Â', "")
-            p_i_t = sans_ponctuation(p_i_t)
+
             p_e_t = tds[2].text.replace('£', "").replace('Â', "")
-            p_e_t = sans_ponctuation(p_e_t)
+
             num_avble = tds[5].text.replace('In stock (', '').replace(' available)', "")
             review_rating = tds[6].text
-            review_rating = sans_ponctuation(review_rating)
 
             title = soup.find('div', {'class': 'col-sm-6 product_main'}).find('h1').text
-            title = sans_ponctuation(title)
+            title = sans_ponctuation(decodeur(title)[:64])
+            if len(title)>=64:
+                print(title,"...")
+            else:
+                print(title)
 
             prod_desc = soup.find('article', {'class': 'product_page'}).findAll('p')[3].text
-            prod_desc = remove_bad_char(prod_desc)
+            if prod_desc != "":
+                prod_desc = decodeur(prod_desc)
+            else:
+                prod_desc = "None"
 
             category = soup.find('ul', {'class': 'breadcrumb'}).findAll('a')[2].text
             category = sans_ponctuation(category)
@@ -125,7 +135,7 @@ def save_books(link, cat):
 
 def dwld_imgs(image_url, title, product_code):
     response = requests.get(image_url)
-    file = open('couvertures/' + remove_bad_char(title) + product_code + '.jpg', "wb")
+    file = open('couvertures/' + remove_bad_char(title) + "_" + product_code + '.jpg', "wb")
     file.write(response.content)
     file.close()
 
@@ -133,29 +143,32 @@ def dwld_imgs(image_url, title, product_code):
 def main():
     delete_folder()
     creation_folder()
-    response = requests.get(index_url)
+    set_url = requests.Session()
+    response = set_url.get(index_url)
     headers = 'product_page_url;universal_product_code;title;price_including_tax;price_excluding_tax;number_available' \
               ';product_description;category;review_rating;image_url\n'
-    if response.ok:
-        cat_links = bts(response.text, features="html.parser")
-        cat_link = cat_links.find('ul', {'class': 'nav nav-list'}).find('ul').findAll('a')
-        # print(cat_Link)
-        for i in range(len(cat_link)):
-            # print(cat_Link[i])
-            with open('livres/' + cat_link[i].text.replace('\n', '').replace(' ', '') + '.csv', 'w',
-                      encoding='utf-8-sig') as file:
-                file.write(headers)
-            print('Catégorie : ' + cat_link[i].text.replace('\n', '').replace(' ',
-                                                                              '') + ' ' + str(
-                i + 1) + '/' + str(len(cat_link)))
-            # fonction pour rechercher les liens des categories
-            get_page_categorie(home_url + cat_link[i].attrs['href'],
-                               cat_link[i].text.replace('\n', '').replace(' ', ''))
-            print("téléchargement terminé")
+
+    cat_links = bts(response.text, features="html.parser")
+    cat_link = cat_links.find('ul', {'class': 'nav nav-list'}).find('ul').findAll('a')
+    # print(cat_Link)
+    for i in range(len(cat_link)):
+        # print(cat_Link[i])
+        texte_remplace = cat_link[i].text.replace('\n', '').replace(' ', '')
+        with open('livres/' + texte_remplace + '.csv', 'w',
+                  encoding='utf-8-sig') as file:
+            file.write(headers)
+        print('Catégorie : ' + texte_remplace + ' ' + str(
+            i + 1) + '/' + str(len(cat_link)))
+        # fonction pour rechercher les liens des categories
+        get_page_categorie(home_url + cat_link[i].attrs['href'],
+                           texte_remplace)
+        print("téléchargements terminés")
 
 
 if __name__ == "__main__":
     try:
+        print("lancement du scraping de ", home_url)
+        print("-" * 16)
 
         main()
 
