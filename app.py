@@ -111,6 +111,7 @@ def save_books(link, cat):
 
             title = soup.find('div', {'class': 'col-sm-6 product_main'}).find('h1').text
             title = sans_ponctuation(decodeur(title)[:64])
+
             if len(title)>=64:
                 print(title,"...")
             else:
@@ -157,18 +158,24 @@ def main():
         with open('livres/' + texte_remplace + '.csv', 'w',
                   encoding='utf-8-sig') as file:
             file.write(headers)
+        decompte = i + 1
         print('Catégorie : ' + texte_remplace + ' ' + str(
-            i + 1) + '/' + str(len(cat_link)))
+            decompte) + '/' + str(len(cat_link)))
         # fonction pour rechercher les liens des categories
         get_page_categorie(home_url + cat_link[i].attrs['href'],
                            texte_remplace)
         print("téléchargements terminés")
+        traits = len(cat_link)-i
+        print("-" * traits)
+
 
 
 if __name__ == "__main__":
     try:
         print("lancement du scraping de ", home_url)
-        print("-" * 16)
+        print("Noms des livres téléchargés (tronqués à 64 caractères)")
+        print(("Voir dans les fichiers de la catégorie leurs noms complets."))
+        print("-" * 50)
 
         main()
 
